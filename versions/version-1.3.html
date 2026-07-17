@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <title>今日判讀 - 南亞科（圖解導覽）</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <style>
+    :root {
+      --bg: #0d0f13;
+      --surface: #171a20;
+      --surface-2: #20242b;
+      --line: rgba(255,255,255,.09);
+      --text: #f7f7f3;
+      --muted: #9da3ad;
+      --red: #ff3b47;
+      --green: #35c55b;
+      --amber: #ffb22e;
+      --blue: #52a8ff;
+      --ease-out: cubic-bezier(.23,1,.32,1);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: #08090c; }
+    body {
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    button { font: inherit; color: inherit; }
+    :focus-visible { outline: 3px solid rgba(82,168,255,.55); outline-offset: 2px; }
+
+    /* ===== 手機外殼／總覽 A ===== */
+    .app {
+      position: relative;
+      width: min(100%, 402px);
+      margin-inline: auto;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 82% 10%, rgba(255,59,71,.10), transparent 30%),
+        var(--bg);
+    }
+    .topbar {
+      flex: 0 0 auto;
+      padding: max(8px, env(safe-area-inset-top)) 12px 6px;
+      display: grid;
+      grid-template-columns: 42px 1fr 42px;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      background: rgba(13,15,19,.92);
+      backdrop-filter: blur(16px);
+    }
+    .icon-btn {
+      width: 38px; height: 38px;
+      border: 0; border-radius: 12px;
+      background: transparent; font-size: 23px; cursor: pointer;
+      transition: transform 140ms var(--ease-out), background-color 160ms ease;
+    }
+    .icon-btn:active { transform: scale(.9); background: var(--surface-2); }
+    .top-title { text-align: center; }
+    .top-title strong { display: block; font-size: 14px; }
+    .top-title span { color: var(--muted); font-size: 10px; }
+
+    main {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 12px 14px 18px;
+    }
+
+    .stock-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; }
+    .stock-id { display: flex; align-items: baseline; gap: 7px; }
+    .stock-id h1 { margin: 0; font-size: 24px; line-height: 1; }
+    .stock-id span { color: var(--muted); font-size: 13px; }
+    .price { margin-top: 9px; display: flex; align-items: baseline; gap: 8px; color: var(--red); }
+    .price strong { font-size: 36px; line-height: 1; letter-spacing: -.03em; }
+    .price span { font-size: 15px; font-weight: 800; }
+    .source-btn {
+      min-height: 36px; padding: 0 12px;
+      border: 1px solid var(--line); border-radius: 12px;
+      color: var(--muted); background: var(--surface); cursor: pointer;
+      transition: transform 140ms var(--ease-out), border-color 160ms ease;
+    }
+    .source-btn:active { transform: scale(.96); }
+
+    .demo-flag {
+      margin: 12px 0 2px;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 10px; border-radius: 999px;
+      border: 1px solid rgba(255,178,46,.28);
+      background: rgba(255,178,46,.10);
+      color: var(--amber); font-size: 10.5px; font-weight: 800; letter-spacing: .03em;
+    }
+
+    .verdict {
+      margin: 10px 0 14px;
+      padding: 13px 14px; border-radius: 16px;
+      border: 1px solid rgba(255,178,46,.30);
+      background: linear-gradient(135deg, rgba(255,178,46,.16), rgba(255,59,71,.07));
+    }
+    .verdict small { display: block; margin-bottom: 5px; color: var(--amber); font-size: 10px; font-weight: 900; letter-spacing: .12em; }
+    .verdict strong { display: block; font-size: 20px; line-height: 1.3; }
+
+    .reels-entry {
+      width: 100%; margin: 0 0 18px; padding: 14px 15px;
+      display: flex; align-items: center; gap: 13px;
+      border: 1px solid rgba(255,59,71,.3); border-radius: 16px;
+      background: linear-gradient(100deg, rgba(255,59,71,.16), rgba(255,59,71,.04));
+      cursor: pointer; text-align: left;
+      transition: transform 150ms var(--ease-out);
+    }
+    .reels-entry:active { transform: scale(.985); }
+    .reels-entry .play {
+      flex: 0 0 auto; width: 42px; height: 42px;
+      display: grid; place-items: center; border-radius: 999px;
+      background: var(--red); color: #fff; font-size: 15px; padding-left: 3px;
+    }
+    .reels-entry .label { flex: 1; }
+    .reels-entry .label b { display: block; font-size: 15px; font-weight: 800; }
+    .reels-entry .label small { display: block; margin-top: 2px; color: #c8ccd2; font-size: 12px; }
+    .reels-entry .chev { flex: 0 0 auto; color: var(--muted); font-size: 20px; }
+
+    .step-head { display: flex; align-items: center; gap: 8px; margin: 0 2px 9px; }
+    .step-head .n {
+      width: 20px; height: 20px; display: grid; place-items: center; border-radius: 999px;
+      background: var(--surface-2); color: var(--muted); font-size: 11px; font-weight: 900;
+    }
+    .step-head.warn .n { background: rgba(255,178,46,.18); color: var(--amber); }
+    .step-head span.t { color: #c8ccd2; font-size: 13px; font-weight: 700; }
+
+    .visual-card {
+      position: relative; overflow: hidden;
+      border: 1px solid var(--line); border-radius: 18px; background: #0a0b0e;
+    }
+    .visual-card.tappable { cursor: pointer; }
+    .visual-card.tappable:active { transform: scale(.99); transition: transform 150ms var(--ease-out); }
+    [data-open-reels] { cursor: pointer; }
+    .yesterday.tappable, .fund.tappable { transition: transform 150ms var(--ease-out); }
+    .yesterday.tappable:active, .fund.tappable:active { transform: scale(.99); }
+    .yesterday .go { color: var(--muted); font-size: 10px; font-weight: 700; }
+    .crop { position: absolute; filter: saturate(.96) contrast(1.04); }
+    .shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,11,14,0) 45%, rgba(10,11,14,.55) 72%, rgba(10,11,14,.97) 100%); }
+    .pill {
+      position: absolute; z-index: 2; top: 11px; left: 11px;
+      display: inline-flex; align-items: center; gap: 6px; padding: 6px 9px;
+      border: 1px solid rgba(255,255,255,.12); border-radius: 999px;
+      background: rgba(9,10,13,.82); color: #fff; font-size: 11px; font-weight: 800;
+    }
+    .pill .dot { width: 7px; height: 7px; border-radius: 999px; background: var(--red); box-shadow: 0 0 0 4px rgba(255,59,71,.13); }
+    .tap-hint {
+      position: absolute; z-index: 2; right: 11px; top: 11px; padding: 5px 9px;
+      border-radius: 999px; background: rgba(9,10,13,.7); color: #fff; font-size: 10px; font-weight: 700;
+    }
+
+    .hero { height: 236px; }
+    .hero .crop { width: 110%; left: -5%; top: -292px; }
+    .hero .cap { position: absolute; z-index: 2; left: 13px; right: 13px; bottom: 13px; }
+    .hero .cap strong { display: block; color: var(--text); font-size: 19px; line-height: 1.25; }
+
+    .two-up { margin-top: 12px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 10px; }
+    .minute { height: 150px; }
+    .minute .crop { width: 160%; left: -30%; top: -8px; }
+    .minute .cap { position: absolute; z-index: 2; left: 11px; right: 11px; bottom: 11px; display: flex; align-items: baseline; justify-content: space-between; }
+    .minute .cap strong { font-size: 15px; font-weight: 800; }
+    .minute .cap span { color: var(--red); font-size: 12px; font-weight: 800; }
+
+    .yesterday { height: 150px; padding: 13px; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(145deg,#20242b,#14161b); display: flex; flex-direction: column; }
+    .yesterday .k { margin: 0 0 11px; display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: .08em; }
+    .sig-list { display: grid; gap: 9px; flex: 1; }
+    .sig { display: grid; grid-template-columns: 8px 1fr; align-items: center; gap: 9px; color: #f4f4ef; font-size: 13px; font-weight: 700; }
+    .sig i { width: 8px; height: 8px; border-radius: 3px; background: var(--red); }
+    .sig:nth-child(2) i { background: var(--amber); }
+    .sig:nth-child(3) i { background: var(--blue); }
+    .state { padding: 7px 9px; border-radius: 10px; color: var(--red); background: rgba(255,59,71,.16); font-size: 12px; font-weight: 900; text-align: center; }
+
+    .fund { margin-top: 12px; padding: 14px; border: 1px solid rgba(255,178,46,.22); border-radius: 18px; background: #141017; }
+    .fund-title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .fund-title strong { font-size: 15px; }
+    .fund-title span { color: var(--amber); font-size: 11px; font-weight: 800; }
+    .div3 { display: grid; grid-template-columns: 1fr 30px 1fr; align-items: stretch; gap: 8px; }
+    .money { padding: 11px; border-radius: 13px; background: #1c2027; }
+    .money b { display: block; margin-bottom: 8px; font-size: 11px; color: #c8ccd2; font-weight: 700; }
+    .money em { display: block; font-style: normal; font-size: 23px; font-weight: 900; letter-spacing: -.03em; }
+    .money small { display: block; margin-top: 5px; color: var(--muted); font-size: 10px; line-height: 1.35; }
+    .money.buy em { color: var(--red); }
+    .money.sell em { color: var(--green); }
+    .vs { display: grid; place-items: center; color: var(--amber); font-size: 12px; font-weight: 900; }
+    .fund-note { margin: 11px 1px 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+
+    footer {
+      flex: 0 0 auto;
+      padding: 11px 14px calc(12px + env(safe-area-inset-bottom));
+      display: grid; grid-template-columns: 1fr 1.8fr; gap: 10px;
+      border-top: 1px solid var(--line);
+      background: rgba(13,15,19,.96); backdrop-filter: blur(16px);
+    }
+    footer button { min-height: 48px; border-radius: 14px; font-weight: 800; cursor: pointer; transition: transform 150ms var(--ease-out); }
+    footer button:active { transform: scale(.97); }
+    .ghost { border: 1px solid var(--line); color: var(--text); background: var(--surface); }
+    .primary { border: 0; color: #111; background: var(--amber); font-size: 15px; font-weight: 900; }
+
+    /* ===== 圖解導覽 B（全幅上下滑） ===== */
+    .reels {
+      position: absolute; inset: 0; z-index: 20;
+      transform: translateY(100%);
+      transition: transform 440ms var(--ease-out);
+      background: #08090c;
+    }
+    .reels.is-open { transform: translateY(0); }
+    .reels-scroll {
+      position: absolute; inset: 0; overflow-y: auto;
+      scroll-snap-type: y mandatory;
+      -ms-overflow-style: none; scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .reels-scroll::-webkit-scrollbar { display: none; }
+    .reel {
+      height: 100dvh; scroll-snap-align: start; position: relative; overflow: hidden;
+    }
+    .reel .crop { filter: saturate(.99) contrast(1.06); }
+    .reel .veil { position: absolute; inset: 0; }
+    .reel .body { position: absolute; left: 20px; right: 20px; bottom: 118px; }
+    .reel .kicker { color: var(--red); font-size: 13px; font-weight: 900; letter-spacing: .14em; }
+    .reel .head { display: block; margin-top: 12px; color: var(--text); font-size: 29px; font-weight: 900; line-height: 1.2; letter-spacing: -.01em; }
+    .reel .desc { margin: 12px 0 0; color: #c8ccd2; font-size: 15px; line-height: 1.55; }
+    .reel .hint {
+      position: absolute; left: 0; right: 0; bottom: 52px;
+      display: flex; flex-direction: column; align-items: center; gap: 5px;
+      color: var(--muted); animation: floatUp 1.8s ease-in-out infinite;
+    }
+    .reel .hint span:first-child { font-size: 18px; }
+    .reel .hint span:last-child { font-size: 12px; font-weight: 700; }
+    @keyframes floatUp { 0%,100% { transform: translateY(0); opacity: .9; } 50% { transform: translateY(-6px); opacity: .5; } }
+
+    /* reel 內的資金磚 */
+    .reel .money-row { display: grid; grid-template-columns: 1fr 30px 1fr; gap: 8px; margin-top: 18px; }
+    .reel .money { background: rgba(28,32,39,.86); backdrop-filter: blur(4px); }
+
+    .reels-top {
+      position: absolute; z-index: 3; top: 0; left: 0; right: 0;
+      padding: max(10px, env(safe-area-inset-top)) 16px 10px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .segs { flex: 1; display: flex; gap: 6px; }
+    .seg { flex: 1; height: 3px; border-radius: 2px; background: rgba(255,255,255,.22); transition: background 260ms ease; }
+    .seg.is-on { background: var(--red); }
+    .reels-close {
+      flex: 0 0 auto; width: 34px; height: 34px; border: 0; border-radius: 999px;
+      display: grid; place-items: center;
+      background: rgba(9,10,13,.6); color: #fff; font-size: 18px; cursor: pointer;
+      transition: transform 140ms var(--ease-out), background-color 160ms ease;
+    }
+    .reels-close:active { transform: scale(.9); }
+    .reel .back-to-overview {
+      margin-top: 24px; min-height: 48px; padding: 0 22px;
+      border: 1px solid rgba(255,255,255,.16); border-radius: 14px;
+      background: rgba(255,255,255,.06); color: var(--text); font-weight: 800; cursor: pointer;
+      transition: transform 150ms var(--ease-out);
+    }
+    .reel .back-to-overview:active { transform: scale(.97); }
+
+    /* 資料說明對話框 */
+    dialog#sourceDialog {
+      width: min(calc(100% - 28px), 360px); padding: 0;
+      border: 1px solid var(--line); border-radius: 20px;
+      color: var(--text); background: #181b20;
+      box-shadow: 0 28px 80px rgba(0,0,0,.58);
+    }
+    dialog#sourceDialog::backdrop { background: rgba(0,0,0,.7); backdrop-filter: blur(3px); }
+    .dialog-head { padding: 14px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+    .dialog-head strong { font-size: 15px; }
+    .dialog-close { width: 36px; height: 36px; border: 0; border-radius: 10px; color: var(--muted); background: transparent; font-size: 22px; cursor: pointer; }
+    .dialog-body { padding: 15px; color: #c2c5cb; font-size: 12px; line-height: 1.65; }
+    .dialog-body code { color: #f0c16d; word-break: break-all; font-size: 10px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <button class="icon-btn" type="button" aria-label="返回">‹</button>
+      <div class="top-title"><strong>今日判讀</strong><span>歷史資料示範</span></div>
+      <button class="icon-btn" type="button" aria-label="更多">⋯</button>
+    </header>
+
+    <main>
+      <section class="stock-head" aria-label="南亞科股價摘要">
+        <div>
+          <div class="stock-id"><h1>南亞科</h1><span>2408</span></div>
+          <div class="price"><strong>448.0</strong><span>▲25　+5.91%</span></div>
+        </div>
+        <button class="source-btn" id="sourceButton" type="button">資料說明</button>
+      </section>
+
+      <div class="demo-flag">示範材料 · 非投資建議 · 2026/07/14 歷史資料</div>
+
+      <section class="verdict" aria-label="一句話判讀">
+        <small>一句話判讀</small>
+        <strong>熱度有理由，但資金還沒跟上</strong>
+      </section>
+
+      <button class="reels-entry" type="button" data-open-reels aria-label="開啟圖解導覽">
+        <span class="play">▶</span>
+        <span class="label"><b>圖解導覽 · 3 段看懂</b><small>用滑的看：發生什麼 → 為什麼 → 風險</small></span>
+        <span class="chev">›</span>
+      </button>
+
+      <div class="step-head"><span class="n">1</span><span class="t">股價正在發生什麼</span></div>
+      <section class="visual-card hero tappable" data-open-reels data-reel-target="1" role="button" tabindex="0" aria-label="三個月 K 線，點看圖解導覽">
+        <img class="crop" src="../assets/2408-03-kline.png" alt="南亞科三個月 K 線" loading="eager">
+        <div class="shade"></div>
+        <div class="pill"><span class="dot"></span>三個月 K 線 · 事件</div>
+        <div class="tap-hint">點圖看導覽 ›</div>
+        <div class="cap"><strong>營收創高後，帶量突破上漲</strong></div>
+      </section>
+
+      <div class="two-up">
+        <section class="visual-card minute tappable" data-open-reels data-reel-target="0" role="button" tabindex="0" aria-label="今日盤中走勢，點看圖解導覽">
+          <img class="crop" src="../assets/2408-01-intraday-line.png" alt="南亞科今日盤中" loading="eager">
+          <div class="shade"></div>
+          <div class="pill">今日盤中</div>
+          <div class="tap-hint">看導覽 ›</div>
+          <div class="cap"><strong>先跌後拉</strong><span>收近高</span></div>
+        </section>
+        <section class="yesterday tappable" data-open-reels data-reel-target="1" role="button" tabindex="0" aria-label="昨日盤勢，點看圖解導覽">
+          <p class="k">昨日盤勢 <span class="go">看導覽 ›</span></p>
+          <div class="sig-list">
+            <div class="sig"><i></i><span>突破均線糾結</span></div>
+            <div class="sig"><i></i><span>成交量放大</span></div>
+            <div class="sig"><i></i><span>短線力道轉強</span></div>
+          </div>
+          <div class="state">多方轉強</div>
+        </section>
+      </div>
+
+      <div class="step-head warn" style="margin-top:16px;"><span class="n">3</span><span class="t">目前最大的資金風險</span></div>
+      <section class="fund tappable" data-open-reels data-reel-target="2" role="button" tabindex="0" aria-label="籌碼與資金分歧，點看圖解導覽">
+        <div class="fund-title"><strong>價格與資金不同步</strong><span>價量背離 ›</span></div>
+        <div class="div3">
+          <div class="money buy"><b>投信一個月</b><em>+7萬張</em><small>持續買進</small></div>
+          <div class="vs">但</div>
+          <div class="money sell"><b>外資／大戶</b><em>↘ 減碼</em><small>外資月減、大戶連三週下降</small></div>
+        </div>
+        <p class="fund-note">股價正在漲，但大資金沒有一起往上。</p>
+      </section>
+    </main>
+
+    <footer>
+      <button class="ghost" type="button">先略過</button>
+      <button class="primary" type="button">追蹤後續變化</button>
+    </footer>
+
+  </div>
+
+  <dialog id="sourceDialog" aria-labelledby="sourceTitle">
+    <div class="dialog-head"><strong id="sourceTitle">資料來源與限制</strong><button class="dialog-close" type="button" aria-label="關閉">×</button></div>
+    <div class="dialog-body">
+      南亞科 2408，2026/07/14 收盤後歷史資料。圖表直接取自籌碼K線 App 個股頁截圖，未用生成式圖片改造數據。<br><br>
+      這不是即時報價，也不是投資建議。本頁為 H8 圖像型互動原型（Version 1.3），示範材料，不代表假設 8 已成立。<br><br>
+      來源：K 線、即時、主力頁截圖（2026/07/14）。
+    </div>
+  </dialog>
+
+  <script data-version="1.3" src="../prototype-controller.js"></script>
+  <script src="../reels.js"></script>
+</body>
+</html>
