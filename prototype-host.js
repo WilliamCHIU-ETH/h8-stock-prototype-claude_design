@@ -60,11 +60,27 @@
       ],
       annotationFoot: "Light Semantic Demo 只比較內容層級與視覺語言；不代表亮白版已成為正式產品方向。",
     },
+    v5: {
+      src: "versions/version-neutral-light-v5.html",
+      mapping: "V5 · Guided UX Flow Candidate",
+      title: "H8 Guided UX Flow Candidate",
+      annotationTitle: "V5 流程候選 · Review Mode",
+      annotationSummary: "從股票 A 的個股首頁出發，測試單一入口、Card Rail、四步導覽與頁內決策；這不是 App 首頁或正式產品方向。",
+      annotations: [
+        "<b>Individual stock home／個股首頁。</b>流程起點是股票 A 的個股頁；返回總覽只代表回到這檔股票的個股首頁。",
+        "<b>Single guided entry。</b>只有一個 Reel 入口，固定由籌碼開始，依序閱讀價格、量能與下一步。",
+        "<b>A／B／C Card Rail。</b>三個資訊角色位於同一條水平 rail；一次顯示一張完整卡與下一張 peek，卡片本身不 deep-link。",
+        "<b>Gesture and keyboard parity。</b>Reel 只使用垂直前後；每頁保留可見按鈕，並支援方向鍵、Page Up/Down、Home、End 與 Escape。",
+        "<b>Decision in context。</b>第四頁直接完成追蹤或略過，提供 Undo，再選擇返回個股首頁或觸發下一支股票出口。",
+        "<b>Validation boundary。</b>保留 V4 視覺與 sample story；V5 是可測 wireframe，尚未經真人驗證。",
+      ],
+      annotationFoot: "V5 只驗證 UX Flow 候選；追蹤狀態限當次 tab，下一支股票目前只送出 placeholder event。",
+    },
   };
   const DEFAULT_VERSION = "v1";
 
   // 相容舊網址參數（1.2→v1、1.3→v2）
-  const LEGACY = { "1.2": "v1", "1.3": "v2", "1.1": "v1", neutral: "v3", light: "v4" };
+  const LEGACY = { "1.2": "v1", "1.3": "v2", "1.1": "v1", neutral: "v3", light: "v4", guided: "v5" };
 
   const frame = document.getElementById("prototypeFrame");
   const mapping = document.getElementById("versionMapping");
@@ -126,10 +142,21 @@
       document.querySelector('[data-version][aria-pressed="true"]')?.focus();
     }
     if (event.data.type === "prototype:skip") {
-      showToast(event.data.version === "neutral" ? "已先略過，可稍後再查看" : "已略過這檔，回到熱門股入口");
+      const message = event.data.version === "v5"
+        ? "已略過這次查看"
+        : event.data.version === "neutral"
+          ? "已先略過，可稍後再查看"
+          : "已略過這檔，回到熱門股入口";
+      showToast(message);
     }
     if (event.data.type === "prototype:tracked") {
       showToast(event.data.tracked ? "已追蹤後續變化" : "已取消追蹤");
+    }
+    if (event.data.type === "prototype:decision-undo") {
+      showToast("已復原剛才的選擇");
+    }
+    if (event.data.type === "prototype:next-stock") {
+      showToast("已觸發下一支股票出口；V5 尚未新增第二檔 sample");
     }
   });
 

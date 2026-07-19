@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>股票 A｜V5 Guided UX Flow</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../neutral-prototype-v5.css">
+</head>
+<body data-page-theme="light">
+  <div class="app" id="appRoot">
+    <header class="topbar">
+      <button class="icon-btn" id="backButton" type="button" aria-label="返回版本切換器">‹</button>
+      <div class="top-title"><strong>股票 A</strong><span>個股首頁</span></div>
+      <button class="icon-btn" id="moreButton" type="button" aria-label="更多選項">⋯</button>
+    </header>
+
+    <main id="stockHome">
+      <section class="stock-head" aria-label="股票 A 觀察狀態">
+        <div>
+          <div class="stock-id"><h1>股票 A</h1><span>SIM-A</span></div>
+          <div class="observation"><small>目前觀察狀態</small><strong>多方訊號形成中</strong></div>
+        </div>
+        <button class="source-btn" id="sourceButton" type="button">資料說明</button>
+      </section>
+
+      <section class="verdict" aria-label="股票 A 綜合判讀">
+        <small>綜合判讀</small>
+        <div class="verdict-row"><strong>多方轉強</strong><span class="verdict-count">2 已出現 · 1 待確認</span></div>
+        <span class="verdict-note">籌碼先出現變化，價格已有反應，量能仍需後續確認。</span>
+      </section>
+
+      <button class="guided-entry" id="guidedEntry" type="button">
+        <span class="entry-icon" aria-hidden="true">▶</span>
+        <span class="entry-copy"><b>用 1 分鐘看懂這次判讀</b><small>依序看籌碼、價格、量能，再決定下一步</small></span>
+        <span class="entry-meta">4 步 <span aria-hidden="true">›</span></span>
+      </button>
+
+      <section class="rail-section" aria-labelledby="railTitle">
+        <div class="section-head">
+          <div><strong id="railTitle">三個判讀面向</strong><span>先預覽，進入後依序閱讀</span></div>
+          <span class="swipe-label" aria-hidden="true">左右滑動</span>
+        </div>
+
+        <div class="signal-rail" id="signalRail" tabindex="0" role="region" aria-label="三個判讀面向，可用左右方向鍵瀏覽">
+          <article class="signal-card" data-rail-index="0">
+            <div class="signal-card-head"><span>資訊候選 A｜籌碼動向</span><i></i></div>
+            <div class="mini-diagram chip-diagram" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <strong>法人籌碼持續增加</strong>
+            <p>主要參與者買盤延續，持股分布逐漸集中。</p>
+          </article>
+
+          <article class="signal-card" data-rail-index="1">
+            <div class="signal-card-head"><span>資訊候選 B｜價格位置</span><i></i></div>
+            <div class="mini-diagram price-diagram" aria-hidden="true"><span></span></div>
+            <strong>價格位於短期參考區上方</strong>
+            <p>價格維持在近期區間偏上位置，暫未回到整理區。</p>
+          </article>
+
+          <article class="signal-card" data-rail-index="2">
+            <div class="signal-card-head"><span>資訊候選 C｜量能確認</span><i class="is-pending"></i></div>
+            <div class="mini-diagram volume-diagram" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <strong>成交量尚未明顯擴大</strong>
+            <p>市場參與程度仍接近近期常態，仍需後續觀察。</p>
+          </article>
+        </div>
+
+        <div class="rail-dots" aria-hidden="true">
+          <span class="is-on"></span><span></span><span></span>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="sourceDialog" aria-labelledby="sourceTitle">
+    <div class="dialog-head">
+      <strong id="sourceTitle">資料說明</strong>
+      <button class="dialog-close" type="button" aria-label="關閉">×</button>
+    </div>
+    <div class="dialog-body">此頁以股票 A 示範一段可替換的判讀故事：籌碼先出現變化、價格已有反應、量能尚待確認。頁面只測試個股首頁到判讀流程的理解，不代表特定公司或交易建議。</div>
+  </dialog>
+
+  <script src="../neutral-prototype-v5.js"></script>
+</body>
+</html>

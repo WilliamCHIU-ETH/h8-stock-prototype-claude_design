@@ -1,5 +1,18 @@
 # Light Demo UX Backlog
 
+## V5 Guided UX Flow Candidate｜2026-07-20
+
+狀態：已建立可操作 wireframe，等待真人操作驗證；這是候選，不是正式產品決策。
+
+- **流程起點**：股票 A 的個股首頁，不是 App 首頁。
+- **Entry Architecture**：只保留一個 guided Reel 入口，固定由資訊候選 A 開始。
+- **Card Rail**：A／B／C 位於同一條水平 rail；一次顯示一張完整卡與下一張 48px peek。卡片只供預覽，不 deep-link。
+- **Reel 1–3**：上滑／下滑前後閱讀，左右不觸發；另提供可見按鈕與鍵盤等價操作。
+- **Reel 4**：在 overlay 內完成追蹤或略過，可 Undo；上滑、Arrow Down 或可見按鈕可返回個股首頁。
+- **流程出口**：返回個股首頁是主要出口；「下一支股票」只送出可測 placeholder event，不新增第二檔 sample。
+- **狀態**：追蹤保存於當次 tab 的 `sessionStorage`；略過不跨 session。
+- **驗證邊界**：V5 保留 V4 亮白／淺灰／黑字／單一藍色、sample story 與 A／B／C 資訊角色；尚未經真人驗證。
+
 ## 本輪 Decision Lock
 
 - **已接受的候選**：V4 Light Demo 的亮白、淺灰、黑字與單一藍色視覺方向。

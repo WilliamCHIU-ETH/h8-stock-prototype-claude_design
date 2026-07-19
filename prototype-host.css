@@ -53,7 +53,7 @@ a { font: inherit; }
 .version-switch {
   padding: 4px;
   display: grid;
-  grid-template-columns: repeat(4, minmax(66px, 1fr));
+  grid-template-columns: repeat(5, minmax(58px, 1fr));
   gap: 4px;
   border: 1px solid var(--host-line);
   border-radius: 14px;
