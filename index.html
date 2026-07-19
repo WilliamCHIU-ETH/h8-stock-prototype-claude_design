@@ -19,6 +19,7 @@
       <nav class="version-switch" aria-label="切換設計版本">
         <button type="button" data-version="v1" aria-pressed="true">V1</button>
         <button type="button" data-version="v2" aria-pressed="false">V2</button>
+        <button type="button" data-version="v3" aria-pressed="false">Neutral Test</button>
       </nav>
 
       <a class="direct-link" id="directLink" href="versions/version-1.2.html" target="_blank" rel="noreferrer">
@@ -38,17 +39,10 @@
         </div>
 
         <aside class="annotations" aria-label="設計註解（僅桌機檢視）">
-          <div class="anno-head">設計註解 · 桌機檢視</div>
-          <p class="anno-sub">這些說明只在電腦寬螢幕出現；手機開啟時看不到，維持乾淨的 App 體驗。</p>
-          <ol class="anno-list">
-            <li><b>一句話判讀先行。</b>先給結論再給圖，降低新手資訊焦慮，不用自己從一堆數字拼答案。</li>
-            <li><b>圖解導覽＝A→B。</b>點任一張卡用「滑的」看三段故事：發生什麼 → 為什麼 → 風險，像限動一頁一個重點。</li>
-            <li><b>圖像先於文字。</b>K 線、分時、主力都是南亞科 7/14 真實截圖，用圖承擔資訊密度，文字只收斂結論。</li>
-            <li><b>資金分歧是重點。</b>把「投信在買、外資大戶在退」並排講清楚——這是 Lite 重新組織、主 App 沒一眼給的判讀。</li>
-            <li><b>非投資建議。</b>已從素材源頭移除分析師推薦價與評等，全頁標「示範材料 · 非投資建議」。</li>
-            <li><b>這版想換回的訊號。</b>新手能不能更快看懂「這檔為什麼熱、風險在哪」——不是導流或成效。</li>
-          </ol>
-          <p class="anno-foot">H8 個股判讀原型 V1／V2｜對應 Day 1 假設 8｜示範材料，非投資建議（註解文字可自行改寫）</p>
+          <div class="anno-head" id="annotationTitle">設計註解 · 桌機檢視</div>
+          <p class="anno-sub" id="annotationSummary">這些說明只在電腦寬螢幕出現；手機開啟時看不到，維持乾淨的 App 體驗。</p>
+          <ol class="anno-list" id="annotationList"></ol>
+          <p class="anno-foot" id="annotationFoot"></p>
         </aside>
       </div>
     </section>
