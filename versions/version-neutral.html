@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <title>股票 A｜多方轉強示意</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <style>
+    :root {
+      --bg: #0d0f13;
+      --surface: #171a20;
+      --surface-2: #20242b;
+      --line: rgba(255,255,255,.09);
+      --text: #f7f7f3;
+      --muted: #9da3ad;
+      --amber: #ffb22e;
+      --ease-out: cubic-bezier(.23,1,.32,1);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: #08090c; }
+    body {
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    button { font: inherit; color: inherit; }
+    :focus-visible { outline: 3px solid rgba(255,178,46,.58); outline-offset: 2px; }
+
+    .app {
+      position: relative;
+      width: min(100%, 402px);
+      margin-inline: auto;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 82% 10%, rgba(255,178,46,.08), transparent 30%),
+        var(--bg);
+    }
+    .topbar {
+      flex: 0 0 auto;
+      padding: max(8px, env(safe-area-inset-top)) 12px 6px;
+      display: grid;
+      grid-template-columns: 42px 1fr 42px;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      background: rgba(13,15,19,.92);
+      backdrop-filter: blur(16px);
+    }
+    .icon-btn {
+      width: 38px; height: 38px;
+      border: 0; border-radius: 12px;
+      background: transparent; font-size: 23px; cursor: pointer;
+      transition: transform 140ms var(--ease-out), background-color 160ms ease;
+    }
+    .icon-btn:active { transform: scale(.9); background: var(--surface-2); }
+    .top-title { text-align: center; }
+    .top-title strong { display: block; font-size: 14px; }
+    .top-title span { color: var(--muted); font-size: 10px; }
+
+    main {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 12px 14px 18px;
+    }
+
+    .stock-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; }
+    .stock-id { display: flex; align-items: baseline; gap: 7px; }
+    .stock-id h1 { margin: 0; font-size: 24px; line-height: 1; }
+    .stock-id span { color: var(--muted); font-size: 13px; }
+    .price { margin-top: 9px; display: flex; align-items: baseline; gap: 8px; color: var(--muted); }
+    .price strong { font-size: 36px; line-height: 1; letter-spacing: -.03em; }
+    .price span { font-size: 15px; font-weight: 800; }
+    .source-btn {
+      min-height: 36px; padding: 0 12px;
+      border: 1px solid var(--line); border-radius: 12px;
+      color: var(--muted); background: var(--surface); cursor: pointer;
+      transition: transform 140ms var(--ease-out), border-color 160ms ease;
+    }
+    .source-btn:active { transform: scale(.96); }
+
+    .demo-flag {
+      width: 252px;
+      margin: 12px 0 2px;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 5px 10px; border-radius: 999px;
+      border: 1px solid rgba(255,178,46,.28);
+      background: rgba(255,178,46,.10);
+      color: var(--amber); font-size: 10.5px; font-weight: 800; letter-spacing: .03em;
+    }
+
+    .verdict {
+      margin: 10px 0 14px;
+      padding: 13px 14px; border-radius: 16px;
+      border: 1px solid rgba(255,178,46,.30);
+      background: linear-gradient(135deg, rgba(255,178,46,.16), rgba(255,255,255,.035));
+    }
+    .verdict small { display: block; margin-bottom: 5px; color: var(--amber); font-size: 10px; font-weight: 900; letter-spacing: .12em; }
+    .verdict strong { display: block; font-size: 20px; line-height: 1.3; }
+    .verdict-note { display: block; margin-top: 5px; color: #c8ccd2; font-size: 12px; line-height: 1.45; }
+
+    .reels-entry {
+      width: 100%; margin: 0 0 18px; padding: 14px 15px;
+      display: flex; align-items: center; gap: 13px;
+      border: 1px solid rgba(255,178,46,.30); border-radius: 16px;
+      background: linear-gradient(100deg, rgba(255,178,46,.14), rgba(255,255,255,.025));
+      cursor: pointer; text-align: left;
+      transition: transform 150ms var(--ease-out);
+    }
+    .reels-entry:active { transform: scale(.985); }
+    .reels-entry .play {
+      flex: 0 0 auto; width: 42px; height: 42px;
+      display: grid; place-items: center; border-radius: 999px;
+      background: var(--amber); color: #111; font-size: 15px; padding-left: 3px;
+    }
+    .reels-entry .label { flex: 1; }
+    .reels-entry .label b { display: block; font-size: 15px; font-weight: 800; }
+    .reels-entry .label small { display: block; margin-top: 2px; color: #c8ccd2; font-size: 12px; }
+    .reels-entry .chev { flex: 0 0 auto; color: var(--muted); font-size: 20px; }
+
+    .step-head { display: flex; align-items: center; gap: 8px; margin: 0 2px 9px; }
+    .step-head .n {
+      width: 20px; height: 20px; display: grid; place-items: center; border-radius: 999px;
+      background: var(--surface-2); color: var(--muted); font-size: 11px; font-weight: 900;
+    }
+    .step-head.warn .n { background: rgba(255,178,46,.18); color: var(--amber); }
+    .step-head span.t { color: #c8ccd2; font-size: 13px; font-weight: 700; }
+
+    .visual-card {
+      position: relative; overflow: hidden;
+      border: 1px solid var(--line); border-radius: 18px; background: #0a0b0e;
+    }
+    .visual-card.tappable { cursor: pointer; }
+    .visual-card.tappable:active { transform: scale(.99); transition: transform 150ms var(--ease-out); }
+    [data-open-reels] { cursor: pointer; }
+    .yesterday.tappable, .fund.tappable { transition: transform 150ms var(--ease-out); }
+    .yesterday.tappable:active, .fund.tappable:active { transform: scale(.99); }
+    .yesterday .go { color: var(--muted); font-size: 10px; font-weight: 700; }
+    .crop { position: absolute; }
+    .neutral-visual {
+      inset: 0;
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px),
+        #11141a;
+      background-size: 44px 44px;
+    }
+    .neutral-visual::before,
+    .neutral-visual::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      transform-origin: center;
+    }
+    .neutral-visual::before {
+      width: 68%; height: 16px; left: 9%; top: 39%;
+      background: linear-gradient(90deg, rgba(255,255,255,.34), rgba(255,178,46,.68));
+      transform: rotate(-7deg);
+    }
+    .neutral-visual::after {
+      width: 48%; height: 14px; right: 8%; top: 57%;
+      background: linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,178,46,.40));
+      transform: rotate(9deg);
+    }
+    .neutral-block {
+      position: absolute;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 12px;
+      background: rgba(255,255,255,.07);
+    }
+    .neutral-block.one { width: 46px; height: 50px; left: 18%; top: 54%; transform: rotate(12deg); }
+    .neutral-block.two { width: 68px; height: 38px; left: 43%; top: 23%; transform: rotate(-8deg); }
+    .neutral-block.three { width: 42px; height: 72px; right: 16%; top: 34%; transform: rotate(17deg); border-color: rgba(255,178,46,.25); }
+    .shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,11,14,0) 45%, rgba(10,11,14,.55) 72%, rgba(10,11,14,.97) 100%); }
+    .pill {
+      position: absolute; z-index: 2; top: 11px; left: 11px;
+      display: inline-flex; align-items: center; gap: 6px; padding: 6px 9px;
+      border: 1px solid rgba(255,255,255,.12); border-radius: 999px;
+      background: rgba(9,10,13,.82); color: #fff; font-size: 11px; font-weight: 800;
+    }
+    .pill .dot { width: 7px; height: 7px; border-radius: 999px; background: var(--amber); box-shadow: 0 0 0 4px rgba(255,178,46,.13); }
+    .tap-hint {
+      position: absolute; z-index: 2; right: 11px; top: 11px; padding: 5px 9px;
+      border-radius: 999px; background: rgba(9,10,13,.7); color: #fff; font-size: 10px; font-weight: 700;
+    }
+
+    .hero { height: 236px; }
+    .hero .crop { inset: 0; }
+    .hero .cap { position: absolute; z-index: 2; left: 13px; right: 13px; top: 50%; transform: translateY(-50%); text-align: center; }
+    .hero .cap strong { display: block; color: var(--text); font-size: 19px; line-height: 1.25; }
+    .hero .cap span { display: block; margin-top: 6px; color: #c8ccd2; font-size: 12px; }
+
+    .two-up { margin-top: 12px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 10px; }
+    .minute { height: 150px; }
+    .minute .crop { inset: 0; }
+    .minute .neutral-visual { background-size: 30px 30px; }
+    .minute .neutral-visual::before { width: 72%; height: 11px; left: 7%; top: 45%; }
+    .minute .neutral-visual::after { width: 45%; height: 9px; top: 61%; }
+    .minute .neutral-block { display: none; }
+    .minute .cap { position: absolute; z-index: 2; left: 11px; right: 11px; top: 50%; transform: translateY(-42%); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    .minute .cap strong { font-size: 15px; font-weight: 800; }
+    .minute .cap span { margin-top: 4px; color: var(--amber); font-size: 12px; font-weight: 800; }
+
+    .yesterday { height: 150px; padding: 13px; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(145deg,#20242b,#14161b); display: flex; flex-direction: column; }
+    .yesterday .k { margin: 0 0 11px; display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: .08em; }
+    .sig-list { display: grid; gap: 9px; flex: 1; }
+    .sig { display: grid; grid-template-columns: 8px 1fr; align-items: center; gap: 9px; color: #f4f4ef; font-size: 13px; font-weight: 700; }
+    .sig i { width: 8px; height: 8px; border-radius: 3px; background: rgba(255,178,46,.78); }
+    .sig:nth-child(2) i { background: rgba(255,178,46,.48); }
+    .sig:nth-child(3) i { background: rgba(255,255,255,.26); }
+    .state { padding: 7px 9px; border-radius: 10px; color: var(--amber); background: rgba(255,178,46,.13); font-size: 12px; font-weight: 900; text-align: center; }
+
+    .fund { height: 188.5px; margin-top: 12px; padding: 14px; border: 1px solid rgba(255,178,46,.22); border-radius: 18px; background: #141414; }
+    .fund-title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .fund-title strong { font-size: 15px; }
+    .fund-title span { color: var(--amber); font-size: 11px; font-weight: 800; }
+    .div3 { display: grid; grid-template-columns: 1fr 30px 1fr; align-items: stretch; gap: 8px; }
+    .money { min-height: 94px; padding: 11px; border-radius: 13px; background: #1c2027; }
+    .money b { display: block; margin-bottom: 8px; font-size: 11px; color: #c8ccd2; font-weight: 700; }
+    .money em { display: block; font-style: normal; font-size: 23px; font-weight: 900; letter-spacing: -.03em; color: var(--text); }
+    .money small { display: block; margin-top: 5px; color: var(--muted); font-size: 10px; line-height: 1.35; }
+    .money:first-child em { color: var(--amber); }
+    .vs { display: grid; place-items: center; color: var(--amber); font-size: 12px; font-weight: 900; }
+    .fund-note { margin: 11px 1px 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+
+    footer {
+      flex: 0 0 auto;
+      padding: 11px 14px calc(12px + env(safe-area-inset-bottom));
+      display: grid; grid-template-columns: 1fr 1.8fr; gap: 10px;
+      border-top: 1px solid var(--line);
+      background: rgba(13,15,19,.96); backdrop-filter: blur(16px);
+    }
+    footer button { min-height: 48px; border-radius: 14px; font-weight: 800; cursor: pointer; transition: transform 150ms var(--ease-out); }
+    footer button:active { transform: scale(.97); }
+    .ghost { border: 1px solid var(--line); color: var(--text); background: var(--surface); }
+    .primary { border: 0; color: #111; background: var(--amber); font-size: 15px; font-weight: 900; }
+    .primary[aria-pressed="true"] { color: var(--text); background: var(--surface-2); box-shadow: inset 0 0 0 1px rgba(255,178,46,.45); }
+
+    dialog#sourceDialog {
+      width: min(calc(100% - 28px), 360px); padding: 0;
+      border: 1px solid var(--line); border-radius: 20px;
+      color: var(--text); background: #181b20;
+      box-shadow: 0 28px 80px rgba(0,0,0,.58);
+    }
+    dialog#sourceDialog::backdrop { background: rgba(0,0,0,.7); backdrop-filter: blur(3px); }
+    .dialog-head { padding: 14px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+    .dialog-head strong { font-size: 15px; }
+    .dialog-close { width: 36px; height: 36px; border: 0; border-radius: 10px; color: var(--muted); background: transparent; font-size: 22px; cursor: pointer; }
+    .dialog-body { padding: 15px; color: #c2c5cb; font-size: 12px; line-height: 1.65; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="appRoot">
+    <header class="topbar">
+      <button class="icon-btn" id="backButton" type="button" aria-label="返回">‹</button>
+      <div class="top-title"><strong>股票 A</strong><span>多方訊號示意</span></div>
+      <button class="icon-btn" id="moreButton" type="button" aria-label="更多">⋯</button>
+    </header>
+
+    <main>
+      <section class="stock-head" aria-label="股票 A 摘要">
+        <div>
+          <div class="stock-id"><h1>股票 A</h1><span>SIM-A</span></div>
+          <div class="price"><strong>52.4</strong><span>+2.3%</span></div>
+        </div>
+        <button class="source-btn" id="sourceButton" type="button">資料說明</button>
+      </section>
+
+      <section class="verdict" aria-label="股票 A 綜合判讀">
+        <small>綜合判讀</small>
+        <strong>多方轉強</strong>
+        <span class="verdict-note">籌碼與價格同步改善，量能仍待確認</span>
+      </section>
+
+      <button class="reels-entry" type="button" data-open-reels aria-label="開啟詳細導覽">
+        <span class="play">▶</span>
+        <span class="label"><b>展開 3 個訊號＋下一步</b><small>用滑的看：籌碼 → 價格 → 風險</small></span>
+        <span class="chev">›</span>
+      </button>
+
+      <div class="step-head"><span class="n">3</span><span class="t">個多方訊號</span></div>
+      <section class="visual-card hero tappable" data-open-reels data-reel-target="1" role="button" tabindex="0" aria-label="價格訊號，點看詳細說明">
+        <div class="crop neutral-visual" aria-hidden="true"><span class="neutral-block one"></span><span class="neutral-block two"></span><span class="neutral-block three"></span></div>
+        <div class="shade"></div>
+        <div class="pill"><span class="dot"></span>價格訊號</div>
+        <div class="tap-hint">看證據 ›</div>
+        <div class="cap"><strong>站上短中期均線</strong><span>價格結構轉強</span></div>
+      </section>
+
+      <div class="two-up">
+        <section class="visual-card minute tappable" data-open-reels data-reel-target="0" role="button" tabindex="0" aria-label="籌碼訊號，點看詳細說明">
+          <div class="crop neutral-visual" aria-hidden="true"></div>
+          <div class="shade"></div>
+          <div class="pill">籌碼訊號</div>
+          <div class="tap-hint">看證據 ›</div>
+          <div class="cap"><strong>外資連買</strong><span>3 日</span></div>
+        </section>
+        <section class="yesterday tappable" data-open-reels data-reel-target="1" role="button" tabindex="0" aria-label="價格確認摘要，點看詳細說明">
+          <p class="k">價格確認 <span class="go">看證據 ›</span></p>
+          <div class="sig-list">
+            <div class="sig"><i></i><span>站上 5 日線</span></div>
+            <div class="sig"><i></i><span>站上 20 日線</span></div>
+            <div class="sig"><i></i><span>短均線上彎</span></div>
+          </div>
+          <div class="state">價格結構轉強</div>
+        </section>
+      </div>
+
+      <div class="step-head warn" style="margin-top:16px;"><span class="n">!</span><span class="t">風險提醒</span></div>
+      <section class="fund tappable" data-open-reels data-reel-target="2" role="button" tabindex="0" aria-label="量能風險，點看詳細說明">
+        <div class="fund-title"><strong>量能尚未確認</strong><span>看證據 ›</span></div>
+        <div class="div3">
+          <div class="money"><b>今日成交量</b><em>1.1×</em><small>相較 20 日均量</small></div>
+          <div class="vs">對比</div>
+          <div class="money"><b>確認狀態</b><em>未達</em><small>尚未明顯放大</small></div>
+        </div>
+        <p class="fund-note">多方訊號出現，但市場參與度仍待確認。</p>
+      </section>
+    </main>
+
+    <footer>
+      <button class="ghost" id="skipButton" type="button">先略過</button>
+      <button class="primary" id="trackButton" type="button" aria-pressed="false">追蹤後續變化</button>
+    </footer>
+  </div>
+
+  <dialog id="sourceDialog" aria-labelledby="sourceTitle">
+    <div class="dialog-head"><strong id="sourceTitle">資料說明</strong><button class="dialog-close" type="button" aria-label="關閉">×</button></div>
+    <div class="dialog-body">本頁以虛構股票 A 示範「外資連續買超、均線轉強、量能尚未明顯放大」。所有公司、價格與指標數值皆為 sample data，不對應真實市場資料或交易建議。</div>
+  </dialog>
+
+  <script src="../neutral-prototype.js"></script>
+</body>
+</html>

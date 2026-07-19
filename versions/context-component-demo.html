@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <title>Reel Content Component Demo</title>
+  <style>
+    :root {
+      --paper: #f4f6f8;
+      --surface: #ffffff;
+      --ink: #17191d;
+      --muted: #686c74;
+      --line: #dde1e7;
+      --soft: #f0f2f5;
+      --accent: #315bd6;
+      --accent-soft: #e4eaff;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { background: var(--paper); }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Noto Sans TC", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .review-note {
+      width: min(1218px, calc(100% - 40px));
+      margin: 34px auto 18px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .review-note h1 {
+      margin: 0;
+      font-size: 17px;
+      letter-spacing: -.02em;
+    }
+
+    .review-note p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .comparison {
+      width: min(1218px, calc(100% - 40px));
+      margin: 0 auto 56px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 390px));
+      justify-content: center;
+      gap: 24px;
+    }
+
+    .phone {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 390 / 844;
+      overflow: hidden;
+      border: 1px solid #cecdc8;
+      border-radius: 32px;
+      background: var(--surface);
+      box-shadow: 0 18px 50px rgba(25, 27, 31, .08);
+    }
+
+    .reel-top {
+      position: absolute;
+      z-index: 3;
+      top: 20px;
+      left: 18px;
+      right: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .segments {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .segment {
+      height: 3px;
+      border-radius: 999px;
+      background: var(--line);
+    }
+
+    .segment.is-on { background: var(--accent); }
+
+    .close {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .92);
+      font-size: 22px;
+      font-weight: 300;
+      line-height: 1;
+    }
+
+    .content-component {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      top: 50%;
+      transform: translateY(-50%);
+      text-align: center;
+    }
+
+    .candidate {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+
+    .candidate::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .media-slot {
+      position: relative;
+      height: 276px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: #fafbfc;
+    }
+
+    .media-slot svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .slot-label {
+      position: absolute;
+      left: 14px;
+      bottom: 12px;
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, .9);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+
+    h2 {
+      margin: 22px 0 0;
+      font-size: clamp(24px, 6.7vw, 29px);
+      line-height: 1.24;
+      letter-spacing: -.04em;
+    }
+
+    .explanation {
+      max-width: 320px;
+      margin: 11px auto 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .next-hint {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 30px;
+      display: grid;
+      justify-items: center;
+      gap: 4px;
+      color: #858990;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .next-hint span:first-child {
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .diagram-label {
+      fill: var(--muted);
+      font-family: inherit;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+
+    @media (max-width: 920px) {
+      .review-note {
+        width: min(390px, calc(100% - 28px));
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .comparison {
+        width: min(390px, calc(100% - 28px));
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .review-note { margin-top: 20px; }
+      .comparison { gap: 16px; }
+      .phone { border-radius: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="review-note">
+    <h1>Reel 中央 Component：內容骨架比較</h1>
+    <p>互動與版位凍結｜單一強調色｜SVG 為可替換 Media Placeholder</p>
+  </header>
+
+  <main class="comparison">
+    <article class="phone" aria-labelledby="signal-a-title">
+      <div class="reel-top" aria-hidden="true">
+        <div class="segments"><span class="segment is-on"></span><span class="segment"></span><span class="segment"></span><span class="segment"></span></div>
+        <span class="close">×</span>
+      </div>
+
+      <section class="content-component">
+        <div class="candidate">資訊候選 A｜籌碼動向</div>
+        <div class="media-slot" role="img" aria-label="主要參與者由分散轉為集中的抽象資料骨架">
+          <svg viewBox="0 0 344 276" aria-hidden="true">
+            <rect width="344" height="276" fill="#fafbfc"/>
+            <text class="diagram-label" x="28" y="37">主要參與者</text>
+            <text class="diagram-label" x="245" y="37">集中區</text>
+
+            <g fill="#d8d9db">
+              <circle cx="42" cy="76" r="7"/><circle cx="42" cy="116" r="7"/><circle cx="42" cy="156" r="7"/><circle cx="42" cy="196" r="7"/>
+              <rect x="58" y="69" width="54" height="14" rx="7"/><rect x="58" y="109" width="76" height="14" rx="7"/>
+              <rect x="58" y="149" width="44" height="14" rx="7"/><rect x="58" y="189" width="66" height="14" rx="7"/>
+            </g>
+
+            <g fill="none" stroke="#c8c9cc" stroke-width="1.5">
+              <path d="M116 76 C168 76 169 91 220 101"/><path d="M138 116 C177 116 179 112 220 112"/>
+              <path d="M106 156 C170 156 172 142 220 129"/><path d="M128 196 C177 196 179 164 220 145"/>
+            </g>
+
+            <rect x="217" y="75" width="99" height="104" rx="18" fill="#e4eaff" stroke="#315bd6" stroke-width="1.5"/>
+            <g fill="#315bd6">
+              <circle cx="244" cy="104" r="8"/><circle cx="271" cy="104" r="8"/><circle cx="289" cy="124" r="8"/>
+              <circle cx="244" cy="139" r="8"/><circle cx="271" cy="139" r="8"/>
+            </g>
+            <g fill="#8ea5ea">
+              <circle cx="289" cy="154" r="8"/><circle cx="262" cy="158" r="8"/>
+            </g>
+          </svg>
+          <span class="slot-label">未來可替換：籌碼視覺素材</span>
+        </div>
+        <h2 id="signal-a-title">法人籌碼持續增加</h2>
+        <p class="explanation">用來判斷主要參與者是否持續集中，而不是呈現特定股票數值。</p>
+      </section>
+
+      <div class="next-hint" aria-hidden="true"><span>⌃</span><span>上滑看價格確認</span></div>
+    </article>
+
+    <article class="phone" aria-labelledby="signal-b-title">
+      <div class="reel-top" aria-hidden="true">
+        <div class="segments"><span class="segment is-on"></span><span class="segment is-on"></span><span class="segment"></span><span class="segment"></span></div>
+        <span class="close">×</span>
+      </div>
+
+      <section class="content-component">
+        <div class="candidate">資訊候選 B｜價格位置</div>
+        <div class="media-slot" role="img" aria-label="目前價格位置高於兩段短期參考區的抽象資料骨架">
+          <svg viewBox="0 0 344 276" aria-hidden="true">
+            <rect width="344" height="276" fill="#fafbfc"/>
+            <text class="diagram-label" x="27" y="37">相對位置</text>
+
+            <rect x="28" y="174" width="288" height="28" rx="10" fill="#e6e5e1"/>
+            <rect x="28" y="132" width="288" height="20" rx="9" fill="#deddd9"/>
+            <text class="diagram-label" x="44" y="192">短期參考區</text>
+            <text class="diagram-label" x="44" y="146">近期參考區</text>
+
+            <path d="M42 164 C83 165 99 151 128 154 C159 156 169 125 201 127 C233 129 241 91 292 91" fill="none" stroke="#a9abb0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="292" cy="91" r="15" fill="#e4eaff" stroke="#315bd6" stroke-width="2"/>
+            <circle cx="292" cy="91" r="5" fill="#315bd6"/>
+            <path d="M292 72 V58" stroke="#315bd6" stroke-width="1.5" stroke-linecap="round"/>
+            <rect x="248" y="36" width="88" height="24" rx="12" fill="#315bd6"/>
+            <text x="292" y="52" text-anchor="middle" fill="#fff" font-size="10" font-weight="800">目前位置</text>
+          </svg>
+          <span class="slot-label">未來可替換：價格視覺素材</span>
+        </div>
+        <h2 id="signal-b-title">價格位於短期參考區上方</h2>
+        <p class="explanation">用來確認市場價格是否回應籌碼變化，不指定日期、價位或實際走勢。</p>
+      </section>
+
+      <div class="next-hint" aria-hidden="true"><span>⌃</span><span>上滑看量能確認</span></div>
+    </article>
+
+    <article class="phone" aria-labelledby="signal-c-title">
+      <div class="reel-top" aria-hidden="true">
+        <div class="segments"><span class="segment is-on"></span><span class="segment is-on"></span><span class="segment is-on"></span><span class="segment"></span></div>
+        <span class="close">×</span>
+      </div>
+
+      <section class="content-component">
+        <div class="candidate">資訊候選 C｜量能確認</div>
+        <div class="media-slot" role="img" aria-label="目前市場參與程度尚未超出近期常態範圍的抽象資料骨架">
+          <svg viewBox="0 0 344 276" aria-hidden="true">
+            <rect width="344" height="276" fill="#fafbfc"/>
+            <text class="diagram-label" x="28" y="37">市場參與程度</text>
+
+            <rect x="28" y="72" width="288" height="116" rx="18" fill="#eeede9"/>
+            <path d="M28 108 H316" stroke="#b8bac0" stroke-width="1.5" stroke-dasharray="5 5"/>
+            <text class="diagram-label" x="42" y="98">近期常態範圍</text>
+
+            <g fill="#ccced2">
+              <rect x="47" y="137" width="18" height="35" rx="5"/><rect x="75" y="125" width="18" height="47" rx="5"/>
+              <rect x="103" y="143" width="18" height="29" rx="5"/><rect x="131" y="118" width="18" height="54" rx="5"/>
+              <rect x="159" y="130" width="18" height="42" rx="5"/><rect x="187" y="122" width="18" height="50" rx="5"/>
+              <rect x="215" y="141" width="18" height="31" rx="5"/>
+            </g>
+            <rect x="249" y="116" width="28" height="56" rx="7" fill="#315bd6"/>
+            <path d="M263 108 V88" stroke="#315bd6" stroke-width="1.5" stroke-linecap="round"/>
+            <rect x="230" y="65" width="66" height="24" rx="12" fill="#315bd6"/>
+            <text x="263" y="81" text-anchor="middle" fill="#fff" font-size="10" font-weight="800">目前</text>
+
+            <circle cx="55" cy="220" r="5" fill="#315bd6"/>
+            <text class="diagram-label" x="69" y="224">尚未明顯超出常態範圍</text>
+          </svg>
+          <span class="slot-label">未來可替換：量能視覺素材</span>
+        </div>
+        <h2 id="signal-c-title">成交量尚未明顯擴大</h2>
+        <p class="explanation">用來提醒訊號仍需確認，不使用可被解讀為真實行情的精確比例。</p>
+      </section>
+
+      <div class="next-hint" aria-hidden="true"><span>⌃</span><span>上滑看下一步</span></div>
+    </article>
+  </main>
+</body>
+</html>
