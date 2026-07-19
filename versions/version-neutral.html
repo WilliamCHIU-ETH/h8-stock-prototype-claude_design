@@ -2,548 +2,339 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="color-scheme" content="dark">
-  <title>股票 A｜互動查看</title>
+  <title>股票 A｜中立內容導覽</title>
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <style>
     :root {
-      --bg: #0b0d11;
+      --bg: #0d0f13;
       --surface: #171a20;
       --surface-2: #20242b;
-      --line: rgba(255,255,255,.1);
+      --line: rgba(255,255,255,.09);
       --text: #f7f7f3;
       --muted: #9da3ad;
       --amber: #ffb22e;
-      --blue: #62aef7;
-      --violet: #9c86ff;
-      --mint: #6bd9b1;
       --ease-out: cubic-bezier(.23,1,.32,1);
     }
-
     * { box-sizing: border-box; }
-    html, body { margin: 0; width: 100%; min-height: 100%; overflow: hidden; background: #07090c; }
+    html, body { margin: 0; height: 100%; background: #08090c; }
     body {
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif;
       -webkit-font-smoothing: antialiased;
     }
-    button { color: inherit; font: inherit; }
-    button, [role="button"] { -webkit-tap-highlight-color: transparent; }
-    :focus-visible { outline: 3px solid rgba(98,174,247,.58); outline-offset: 2px; }
+    button { font: inherit; color: inherit; }
+    :focus-visible { outline: 3px solid rgba(255,178,46,.58); outline-offset: 2px; }
 
     .app {
-      width: min(100%, 390px);
-      height: 100dvh;
+      position: relative;
+      width: min(100%, 402px);
       margin-inline: auto;
+      height: 100dvh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
       background:
-        radial-gradient(circle at 78% 4%, rgba(156,134,255,.12), transparent 28%),
+        radial-gradient(circle at 82% 10%, rgba(255,178,46,.08), transparent 30%),
         var(--bg);
     }
-
     .topbar {
       flex: 0 0 auto;
-      min-height: 53px;
-      padding: max(8px, env(safe-area-inset-top)) 12px 7px;
+      padding: max(8px, env(safe-area-inset-top)) 12px 6px;
       display: grid;
       grid-template-columns: 42px 1fr 42px;
       align-items: center;
       border-bottom: 1px solid var(--line);
-      background: rgba(11,13,17,.92);
+      background: rgba(13,15,19,.92);
       backdrop-filter: blur(16px);
     }
-    .icon-button {
-      width: 38px;
-      height: 38px;
-      border: 0;
-      border-radius: 12px;
-      background: transparent;
-      font-size: 23px;
-      cursor: pointer;
-      transition: transform 150ms var(--ease-out), background-color 160ms ease;
+    .icon-btn {
+      width: 38px; height: 38px;
+      border: 0; border-radius: 12px;
+      background: transparent; font-size: 23px; cursor: pointer;
+      transition: transform 140ms var(--ease-out), background-color 160ms ease;
     }
-    .icon-button:active { transform: scale(.92); background: var(--surface-2); }
-    .page-title { text-align: center; }
-    .page-title strong { display: block; font-size: 14px; }
-    .page-title span { display: block; margin-top: 1px; color: var(--muted); font-size: 10px; }
-
-    .main-tabs {
-      flex: 0 0 auto;
-      padding: 7px 12px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      border-bottom: 1px solid var(--line);
-      background: rgba(11,13,17,.96);
-    }
-    .main-tabs button {
-      min-height: 36px;
-      border: 0;
-      border-radius: 11px;
-      color: var(--muted);
-      background: transparent;
-      font-size: 13px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-    .main-tabs button[aria-selected="true"] { color: #111; background: var(--amber); }
+    .icon-btn:active { transform: scale(.9); background: var(--surface-2); }
+    .top-title { text-align: center; }
+    .top-title strong { display: block; font-size: 14px; }
+    .top-title span { color: var(--muted); font-size: 10px; }
 
     main {
       flex: 1 1 auto;
-      min-height: 0;
       overflow-y: auto;
-      overflow-x: hidden;
-      padding: 12px 14px 18px;
-      overscroll-behavior: contain;
       -webkit-overflow-scrolling: touch;
-    }
-    [role="tabpanel"][hidden] { display: none; }
-
-    .stock-summary { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
-    .stock-name { margin: 0; font-size: 24px; line-height: 1; }
-    .neutral-values { margin-top: 8px; display: flex; gap: 9px; color: var(--muted); font-size: 18px; font-weight: 900; }
-    .source-button {
-      min-height: 36px;
-      padding: 0 12px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      color: var(--muted);
-      background: var(--surface);
-      font-size: 12px;
-      font-weight: 750;
-      cursor: pointer;
+      padding: 12px 14px 18px;
     }
 
-    .status-card {
-      margin: 12px 0;
-      padding: 12px 13px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      border: 1px solid rgba(255,178,46,.25);
-      border-radius: 16px;
-      background: linear-gradient(135deg, rgba(255,178,46,.13), rgba(156,134,255,.07));
+    .stock-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; }
+    .stock-id { display: flex; align-items: baseline; gap: 7px; }
+    .stock-id h1 { margin: 0; font-size: 24px; line-height: 1; }
+    .stock-id span { color: var(--muted); font-size: 13px; }
+    .price { margin-top: 9px; display: flex; align-items: baseline; gap: 8px; color: var(--muted); }
+    .price strong { font-size: 36px; line-height: 1; letter-spacing: -.03em; }
+    .price span { font-size: 15px; font-weight: 800; }
+    .source-btn {
+      min-height: 36px; padding: 0 12px;
+      border: 1px solid var(--line); border-radius: 12px;
+      color: var(--muted); background: var(--surface); cursor: pointer;
+      transition: transform 140ms var(--ease-out), border-color 160ms ease;
     }
-    .status-card small { display: block; margin-bottom: 3px; color: var(--amber); font-size: 10px; font-weight: 900; letter-spacing: .08em; }
-    .status-card strong { display: block; font-size: 16px; line-height: 1.3; }
-    .status-dot { width: 12px; height: 12px; border-radius: 999px; background: var(--amber); box-shadow: 0 0 0 7px rgba(255,178,46,.11); }
+    .source-btn:active { transform: scale(.96); }
 
-    .chart-card {
+    .demo-flag {
+      width: 252px;
+      margin: 12px 0 2px;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 5px 10px; border-radius: 999px;
+      border: 1px solid rgba(255,178,46,.28);
+      background: rgba(255,178,46,.10);
+      color: var(--amber); font-size: 10.5px; font-weight: 800; letter-spacing: .03em;
+    }
+
+    .verdict {
+      margin: 10px 0 14px;
+      padding: 13px 14px; border-radius: 16px;
+      border: 1px solid rgba(255,178,46,.30);
+      background: linear-gradient(135deg, rgba(255,178,46,.16), rgba(255,255,255,.035));
+    }
+    .verdict small { display: block; margin-bottom: 5px; color: var(--amber); font-size: 10px; font-weight: 900; letter-spacing: .12em; }
+    .verdict strong { display: block; font-size: 20px; line-height: 1.3; }
+
+    .reels-entry {
+      width: 100%; margin: 0 0 18px; padding: 14px 15px;
+      display: flex; align-items: center; gap: 13px;
+      border: 1px solid rgba(255,178,46,.30); border-radius: 16px;
+      background: linear-gradient(100deg, rgba(255,178,46,.14), rgba(255,255,255,.025));
+      cursor: pointer; text-align: left;
+      transition: transform 150ms var(--ease-out);
+    }
+    .reels-entry:active { transform: scale(.985); }
+    .reels-entry .play {
+      flex: 0 0 auto; width: 42px; height: 42px;
+      display: grid; place-items: center; border-radius: 999px;
+      background: var(--amber); color: #111; font-size: 15px; padding-left: 3px;
+    }
+    .reels-entry .label { flex: 1; }
+    .reels-entry .label b { display: block; font-size: 15px; font-weight: 800; }
+    .reels-entry .label small { display: block; margin-top: 2px; color: #c8ccd2; font-size: 12px; }
+    .reels-entry .chev { flex: 0 0 auto; color: var(--muted); font-size: 20px; }
+
+    .step-head { display: flex; align-items: center; gap: 8px; margin: 0 2px 9px; }
+    .step-head .n {
+      width: 20px; height: 20px; display: grid; place-items: center; border-radius: 999px;
+      background: var(--surface-2); color: var(--muted); font-size: 11px; font-weight: 900;
+    }
+    .step-head.warn .n { background: rgba(255,178,46,.18); color: var(--amber); }
+    .step-head span.t { color: #c8ccd2; font-size: 13px; font-weight: 700; }
+
+    .visual-card {
+      position: relative; overflow: hidden;
+      border: 1px solid var(--line); border-radius: 18px; background: #0a0b0e;
+    }
+    .visual-card.tappable { cursor: pointer; }
+    .visual-card.tappable:active { transform: scale(.99); transition: transform 150ms var(--ease-out); }
+    [data-open-reels] { cursor: pointer; }
+    .yesterday.tappable, .fund.tappable { transition: transform 150ms var(--ease-out); }
+    .yesterday.tappable:active, .fund.tappable:active { transform: scale(.99); }
+    .yesterday .go { color: var(--muted); font-size: 10px; font-weight: 700; }
+    .crop { position: absolute; }
+    .neutral-visual {
+      inset: 0;
       overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 19px;
-      background: var(--surface);
-      transition: border-color 180ms ease, transform 220ms var(--ease-out);
-    }
-    .chart-card.is-expanded { border-color: rgba(98,174,247,.42); }
-    .chart-head { padding: 12px 12px 8px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .chart-head strong { font-size: 15px; }
-    .chart-head button {
-      min-height: 32px;
-      padding: 0 10px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      color: var(--muted);
-      background: var(--surface-2);
-      font-size: 11px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-    .period-switch { padding: 0 12px 10px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-    .period-switch button {
-      min-height: 32px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      color: var(--muted);
-      background: transparent;
-      font-size: 11px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-    .period-switch button[aria-pressed="true"] { color: var(--text); border-color: rgba(255,178,46,.45); background: rgba(255,178,46,.13); }
-
-    .abstract-plot {
-      --focus-x: 50%;
-      --focus-y: 46%;
-      position: relative;
-      height: 224px;
-      margin: 0 9px 9px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 15px;
       background:
-        radial-gradient(circle at 24% 35%, rgba(98,174,247,.17), transparent 25%),
-        radial-gradient(circle at 76% 64%, rgba(156,134,255,.18), transparent 28%),
-        #101319;
-      touch-action: none;
-      cursor: crosshair;
-      transition: height 220ms var(--ease-out), background-color 180ms ease;
+        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px),
+        #11141a;
+      background-size: 44px 44px;
     }
-    .chart-card.is-expanded .abstract-plot { height: 344px; }
-    .abstract-plot::before,
-    .abstract-plot::after {
+    .neutral-visual::before,
+    .neutral-visual::after {
       content: "";
       position: absolute;
       border-radius: 999px;
-      opacity: .7;
-      transition: transform 240ms var(--ease-out), width 240ms var(--ease-out);
+      transform-origin: center;
     }
-    .abstract-plot::before { width: 62%; height: 18px; left: 8%; top: 31%; background: linear-gradient(90deg, var(--blue), var(--violet)); transform: rotate(-7deg); }
-    .abstract-plot::after { width: 48%; height: 14px; right: 7%; bottom: 27%; background: linear-gradient(90deg, var(--mint), var(--amber)); transform: rotate(8deg); }
-    .abstract-plot[data-period="medium"]::before { width: 76%; transform: rotate(4deg) translateY(16px); }
-    .abstract-plot[data-period="medium"]::after { width: 59%; transform: rotate(-6deg) translateY(-12px); }
-    .abstract-plot[data-period="long"]::before { width: 44%; transform: rotate(13deg) translate(42px, 24px); }
-    .abstract-plot[data-period="long"]::after { width: 76%; transform: rotate(-3deg) translateY(-24px); }
-    .shape {
+    .neutral-visual::before {
+      width: 68%; height: 16px; left: 9%; top: 39%;
+      background: linear-gradient(90deg, rgba(255,255,255,.34), rgba(255,178,46,.68));
+      transform: rotate(-7deg);
+    }
+    .neutral-visual::after {
+      width: 48%; height: 14px; right: 8%; top: 57%;
+      background: linear-gradient(90deg, rgba(255,255,255,.22), rgba(255,178,46,.40));
+      transform: rotate(9deg);
+    }
+    .neutral-block {
       position: absolute;
-      border: 1px solid rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.14);
       border-radius: 12px;
       background: rgba(255,255,255,.07);
-      box-shadow: 0 12px 28px rgba(0,0,0,.18);
-      transition: transform 240ms var(--ease-out), opacity 180ms ease;
     }
-    .shape-one { width: 48px; height: 48px; left: 14%; top: 55%; transform: rotate(12deg); }
-    .shape-two { width: 70px; height: 36px; left: 42%; top: 18%; transform: rotate(-8deg); background: rgba(98,174,247,.14); }
-    .shape-three { width: 44px; height: 76px; right: 14%; top: 38%; transform: rotate(18deg); background: rgba(156,134,255,.13); }
-    .abstract-plot[data-period="medium"] .shape-one { transform: translate(35px,-28px) rotate(28deg); }
-    .abstract-plot[data-period="medium"] .shape-two { transform: translate(-34px,66px) rotate(3deg); }
-    .abstract-plot[data-period="medium"] .shape-three { transform: translate(-18px,-28px) rotate(-12deg); }
-    .abstract-plot[data-period="long"] .shape-one { transform: translate(138px,-52px) rotate(45deg); }
-    .abstract-plot[data-period="long"] .shape-two { transform: translate(-74px,92px) rotate(-18deg); }
-    .abstract-plot[data-period="long"] .shape-three { transform: translate(-146px,22px) rotate(7deg); }
-    .focus-marker {
-      position: absolute;
-      z-index: 3;
-      left: var(--focus-x);
-      top: var(--focus-y);
-      width: 18px;
-      height: 18px;
-      border: 3px solid #111;
-      border-radius: 999px;
-      background: var(--amber);
-      box-shadow: 0 0 0 5px rgba(255,178,46,.2);
-      opacity: 0;
-      transform: translate(-50%,-50%) scale(.75);
-      transition: opacity 120ms ease, transform 160ms var(--ease-out);
-      pointer-events: none;
+    .neutral-block.one { width: 46px; height: 50px; left: 18%; top: 54%; transform: rotate(12deg); }
+    .neutral-block.two { width: 68px; height: 38px; left: 43%; top: 23%; transform: rotate(-8deg); }
+    .neutral-block.three { width: 42px; height: 72px; right: 16%; top: 34%; transform: rotate(17deg); border-color: rgba(255,178,46,.25); }
+    .shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,11,14,0) 45%, rgba(10,11,14,.55) 72%, rgba(10,11,14,.97) 100%); }
+    .pill {
+      position: absolute; z-index: 2; top: 11px; left: 11px;
+      display: inline-flex; align-items: center; gap: 6px; padding: 6px 9px;
+      border: 1px solid rgba(255,255,255,.12); border-radius: 999px;
+      background: rgba(9,10,13,.82); color: #fff; font-size: 11px; font-weight: 800;
     }
-    .chart-tooltip {
-      position: absolute;
-      z-index: 4;
-      left: clamp(78px, var(--focus-x), calc(100% - 78px));
-      top: max(14px, calc(var(--focus-y) - 54px));
-      min-width: 136px;
-      padding: 8px 10px;
-      border: 1px solid rgba(255,255,255,.14);
-      border-radius: 10px;
-      color: var(--text);
-      background: rgba(26,29,35,.96);
-      box-shadow: 0 12px 30px rgba(0,0,0,.34);
-      font-size: 11px;
-      font-weight: 800;
-      text-align: center;
-      opacity: 0;
-      transform: translate(-50%,4px);
-      transition: opacity 120ms ease, transform 160ms var(--ease-out);
-      pointer-events: none;
+    .pill .dot { width: 7px; height: 7px; border-radius: 999px; background: var(--amber); box-shadow: 0 0 0 4px rgba(255,178,46,.13); }
+    .tap-hint {
+      position: absolute; z-index: 2; right: 11px; top: 11px; padding: 5px 9px;
+      border-radius: 999px; background: rgba(9,10,13,.7); color: #fff; font-size: 10px; font-weight: 700;
     }
-    .abstract-plot.has-focus .focus-marker,
-    .abstract-plot.has-focus .chart-tooltip { opacity: 1; transform: translate(-50%,-50%) scale(1); }
-    .abstract-plot.has-focus .chart-tooltip { transform: translate(-50%,0); }
-    .drag-hint {
-      position: absolute;
-      z-index: 2;
-      left: 50%;
-      bottom: 12px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      color: #d3d6db;
-      background: rgba(8,10,13,.72);
-      font-size: 10px;
-      font-weight: 750;
-      transform: translateX(-50%);
-      pointer-events: none;
-    }
-    .period-feedback { min-height: 18px; margin: 0 12px 8px; color: var(--muted); font-size: 10px; }
 
-    .detail-grid { margin-top: 11px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .detail-card {
-      min-height: 116px;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: space-between;
-      border: 1px solid var(--line);
-      border-radius: 17px;
-      color: var(--text);
-      background: linear-gradient(145deg, #20242b, #15181d);
-      text-align: left;
-      cursor: pointer;
-      transition: transform 150ms var(--ease-out), border-color 160ms ease;
-    }
-    .detail-card:active { transform: scale(.98); }
-    .detail-card small { color: var(--muted); font-size: 10px; font-weight: 850; letter-spacing: .06em; }
-    .detail-card strong { font-size: 15px; line-height: 1.35; }
-    .detail-card span { color: var(--amber); font-size: 11px; font-weight: 800; }
-    .next-card { width: 100%; min-height: 54px; margin-top: 10px; padding: 0 14px; flex-direction: row; align-items: center; }
+    .hero { height: 236px; }
+    .hero .crop { inset: 0; }
+    .hero .cap { position: absolute; z-index: 2; left: 13px; right: 13px; bottom: 13px; }
+    .hero .cap strong { display: block; color: var(--text); font-size: 19px; line-height: 1.25; }
 
-    .simple-panel { display: grid; gap: 11px; }
-    .abstract-field, .relative-blocks {
-      min-height: 248px;
-      padding: 18px;
-      display: grid;
-      border: 1px solid var(--line);
-      border-radius: 19px;
-      background: var(--surface);
-    }
-    .pulse-row { display: flex; align-items: center; justify-content: space-around; gap: 12px; }
-    .pulse-row i { width: 28px; height: 28px; border-radius: 999px; background: rgba(98,174,247,.22); box-shadow: 0 0 0 9px rgba(98,174,247,.06); }
-    .pulse-row i:nth-child(2) { width: 52px; height: 52px; background: rgba(156,134,255,.24); }
-    .pulse-row i:nth-child(3) { width: 38px; height: 38px; background: rgba(107,217,177,.22); }
-    .field-copy { align-self: end; }
-    .field-copy small { color: var(--muted); }
-    .field-copy strong { display: block; margin-top: 4px; font-size: 18px; }
-    .relative-blocks { grid-template-columns: 1.2fr .8fr; grid-template-rows: 1fr 1fr; gap: 10px; }
-    .relative-blocks i { min-height: 72px; border-radius: 15px; background: rgba(98,174,247,.18); }
-    .relative-blocks i:first-child { grid-row: 1 / -1; background: rgba(156,134,255,.2); }
-    .relative-blocks i:last-child { background: rgba(107,217,177,.18); }
+    .two-up { margin-top: 12px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 10px; }
+    .minute { height: 150px; }
+    .minute .crop { inset: 0; }
+    .minute .neutral-visual { background-size: 30px 30px; }
+    .minute .neutral-visual::before { width: 72%; height: 11px; left: 7%; top: 45%; }
+    .minute .neutral-visual::after { width: 45%; height: 9px; top: 61%; }
+    .minute .neutral-block { display: none; }
+    .minute .cap { position: absolute; z-index: 2; left: 11px; right: 11px; bottom: 11px; display: flex; align-items: baseline; justify-content: space-between; }
+    .minute .cap strong { font-size: 15px; font-weight: 800; }
+    .minute .cap span { color: var(--amber); font-size: 12px; font-weight: 800; }
+
+    .yesterday { height: 150px; padding: 13px; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(145deg,#20242b,#14161b); display: flex; flex-direction: column; }
+    .yesterday .k { margin: 0 0 11px; display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: .08em; }
+    .sig-list { display: grid; gap: 9px; flex: 1; }
+    .sig { display: grid; grid-template-columns: 8px 1fr; align-items: center; gap: 9px; color: #f4f4ef; font-size: 13px; font-weight: 700; }
+    .sig i { width: 8px; height: 8px; border-radius: 3px; background: rgba(255,178,46,.78); }
+    .sig:nth-child(2) i { background: rgba(255,178,46,.48); }
+    .sig:nth-child(3) i { background: rgba(255,255,255,.26); }
+    .state { padding: 7px 9px; border-radius: 10px; color: var(--amber); background: rgba(255,178,46,.13); font-size: 12px; font-weight: 900; text-align: center; }
+
+    .fund { height: 188.5px; margin-top: 12px; padding: 14px; border: 1px solid rgba(255,178,46,.22); border-radius: 18px; background: #141414; }
+    .fund-title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .fund-title strong { font-size: 15px; }
+    .fund-title span { color: var(--amber); font-size: 11px; font-weight: 800; }
+    .div3 { display: grid; grid-template-columns: 1fr 30px 1fr; align-items: stretch; gap: 8px; }
+    .money { min-height: 94px; padding: 11px; border-radius: 13px; background: #1c2027; }
+    .money b { display: block; margin-bottom: 8px; font-size: 11px; color: #c8ccd2; font-weight: 700; }
+    .money em { display: block; font-style: normal; font-size: 23px; font-weight: 900; letter-spacing: -.03em; color: var(--text); }
+    .money small { display: block; margin-top: 5px; color: var(--muted); font-size: 10px; line-height: 1.35; }
+    .money:first-child em { color: var(--amber); }
+    .vs { display: grid; place-items: center; color: var(--amber); font-size: 12px; font-weight: 900; }
+    .fund-note { margin: 11px 1px 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
 
     footer {
       flex: 0 0 auto;
-      padding: 10px 14px calc(11px + env(safe-area-inset-bottom));
-      display: grid;
-      grid-template-columns: 1fr 1.7fr;
-      gap: 9px;
+      padding: 11px 14px calc(12px + env(safe-area-inset-bottom));
+      display: grid; grid-template-columns: 1fr 1.8fr; gap: 10px;
       border-top: 1px solid var(--line);
-      background: rgba(11,13,17,.96);
-      backdrop-filter: blur(16px);
+      background: rgba(13,15,19,.96); backdrop-filter: blur(16px);
     }
-    footer button { min-height: 48px; border-radius: 14px; font-weight: 900; cursor: pointer; }
-    .skip-button { border: 1px solid var(--line); background: var(--surface); }
-    .track-button { border: 0; color: #111; background: var(--amber); }
-    .track-button[aria-pressed="true"] { color: var(--text); background: var(--surface-2); box-shadow: inset 0 0 0 1px rgba(107,217,177,.42); }
+    footer button { min-height: 48px; border-radius: 14px; font-weight: 800; cursor: pointer; transition: transform 150ms var(--ease-out); }
+    footer button:active { transform: scale(.97); }
+    .ghost { border: 1px solid var(--line); color: var(--text); background: var(--surface); }
+    .primary { border: 0; color: #111; background: var(--amber); font-size: 15px; font-weight: 900; }
+    .primary[aria-pressed="true"] { color: var(--text); background: var(--surface-2); box-shadow: inset 0 0 0 1px rgba(255,178,46,.45); }
 
-    .toast {
-      position: fixed;
-      z-index: 80;
-      left: 50%;
-      bottom: calc(78px + env(safe-area-inset-bottom));
-      max-width: min(84vw, 300px);
-      padding: 10px 14px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      color: var(--text);
-      background: rgba(26,29,35,.97);
-      box-shadow: 0 18px 48px rgba(0,0,0,.42);
-      font-size: 12px;
-      font-weight: 800;
-      text-align: center;
-      opacity: 0;
-      pointer-events: none;
-      transform: translate(-50%,8px);
-      transition: opacity 160ms ease, transform 160ms ease;
-    }
-    .toast.is-visible { opacity: 1; transform: translate(-50%,0); }
-
-    dialog {
-      width: min(calc(100% - 28px), 360px);
-      padding: 0;
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      color: var(--text);
-      background: #181b20;
+    dialog#sourceDialog {
+      width: min(calc(100% - 28px), 360px); padding: 0;
+      border: 1px solid var(--line); border-radius: 20px;
+      color: var(--text); background: #181b20;
       box-shadow: 0 28px 80px rgba(0,0,0,.58);
     }
-    dialog::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(3px); }
+    dialog#sourceDialog::backdrop { background: rgba(0,0,0,.7); backdrop-filter: blur(3px); }
     .dialog-head { padding: 14px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
     .dialog-head strong { font-size: 15px; }
     .dialog-close { width: 36px; height: 36px; border: 0; border-radius: 10px; color: var(--muted); background: transparent; font-size: 22px; cursor: pointer; }
-    .dialog-body { padding: 15px; color: #c8ccd2; font-size: 13px; line-height: 1.65; }
-    .dialog-actions { padding: 0 15px 15px; display: grid; gap: 8px; }
-    .dialog-actions button { min-height: 44px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); font-weight: 800; cursor: pointer; }
+    .dialog-body { padding: 15px; color: #c2c5cb; font-size: 12px; line-height: 1.65; }
 
-    .guide-overlay {
-      position: fixed;
-      z-index: 60;
-      inset: 0;
-      width: min(100%,390px);
-      margin-inline: auto;
-      background: #080a0d;
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(100%);
-      transition: transform 420ms var(--ease-out), opacity 180ms ease, visibility 0s linear 420ms;
-    }
-    .guide-overlay.is-open { opacity: 1; visibility: visible; transform: translateY(0); transition-delay: 0s; }
-    .guide-top {
-      position: absolute;
-      z-index: 3;
-      top: 0;
-      left: 0;
-      right: 0;
-      padding: max(10px, env(safe-area-inset-top)) 14px 10px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .guide-segments { flex: 1; display: flex; gap: 6px; }
-    .guide-segments i { flex: 1; height: 3px; border-radius: 4px; background: rgba(255,255,255,.2); }
-    .guide-segments i.is-on { background: var(--amber); }
-    .guide-close { width: 36px; height: 36px; border: 0; border-radius: 999px; background: rgba(17,19,24,.78); font-size: 18px; cursor: pointer; }
-    .guide-scroll { position: absolute; inset: 0; overflow-y: auto; scroll-snap-type: y mandatory; scrollbar-width: none; overscroll-behavior: contain; }
-    .guide-scroll::-webkit-scrollbar { display: none; }
-    .guide-page { position: relative; height: 100dvh; overflow: hidden; scroll-snap-align: start; scroll-snap-stop: always; }
-    .guide-scene { position: absolute; inset: 0; overflow: hidden; }
-    .guide-scene::before,
-    .guide-scene::after { content: ""; position: absolute; border-radius: 999px; filter: blur(1px); }
-    .scene-status::before { width: 260px; height: 92px; left: -28px; top: 22%; background: linear-gradient(90deg, rgba(98,174,247,.48), rgba(156,134,255,.24)); transform: rotate(-12deg); }
-    .scene-status::after { width: 120px; height: 120px; right: 30px; top: 12%; border: 20px solid rgba(107,217,177,.2); }
-    .scene-reason::before { width: 120px; height: 120px; left: 38px; top: 15%; border-radius: 28px; background: rgba(156,134,255,.28); transform: rotate(18deg); }
-    .scene-reason::after { width: 190px; height: 44px; right: -20px; top: 31%; background: rgba(255,178,46,.27); transform: rotate(-8deg); }
-    .scene-watch::before { width: 74px; height: 230px; left: 72px; top: 10%; border-radius: 25px; background: rgba(98,174,247,.25); transform: rotate(24deg); }
-    .scene-watch::after { width: 150px; height: 150px; right: 35px; top: 20%; border: 18px solid rgba(255,178,46,.19); }
-    .scene-next::before { width: 260px; height: 260px; left: 50%; top: 15%; border: 34px solid rgba(107,217,177,.14); transform: translateX(-50%); }
-    .scene-next::after { width: 56px; height: 56px; left: 50%; top: 29%; background: var(--amber); transform: translateX(-50%) rotate(45deg); }
-    .guide-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,10,13,.05), rgba(8,10,13,.18) 36%, #080a0d 62%); }
-    .guide-copy { position: absolute; z-index: 2; left: 20px; right: 20px; bottom: 108px; }
-    .guide-kicker { color: var(--amber); font-size: 12px; font-weight: 900; letter-spacing: .12em; }
-    .guide-copy h2 { margin: 11px 0 0; font-size: 29px; line-height: 1.18; }
-    .guide-copy p { margin: 12px 0 0; color: #c8ccd2; font-size: 15px; line-height: 1.6; }
-    .guide-hint { position: absolute; z-index: 2; left: 0; right: 0; bottom: 42px; color: var(--muted); font-size: 12px; font-weight: 750; text-align: center; animation: guideFloat 1.8s ease-in-out infinite; }
-    .guide-back { min-height: 48px; margin-top: 22px; padding: 0 20px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,.06); font-weight: 850; cursor: pointer; }
-    @keyframes guideFloat { 50% { transform: translateY(-5px); opacity: .55; } }
-
-    @media (hover: hover) and (pointer: fine) {
-      .source-button:hover, .icon-button:hover, .chart-head button:hover { border-color: rgba(255,255,255,.22); color: var(--text); }
-      .detail-card:hover { border-color: rgba(255,178,46,.3); }
-    }
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 1ms !important; transition-duration: 1ms !important; transition-delay: 0s !important; }
+      *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; }
     }
   </style>
 </head>
 <body>
   <div class="app" id="appRoot">
     <header class="topbar">
-      <button class="icon-button" id="backButton" type="button" aria-label="返回">‹</button>
-      <div class="page-title"><strong>股票 A</strong><span id="pageContext">K 線</span></div>
-      <button class="icon-button" id="moreButton" type="button" aria-label="更多">⋯</button>
+      <button class="icon-btn" id="backButton" type="button" aria-label="返回">‹</button>
+      <div class="top-title"><strong>目前狀態</strong><span>中立內容</span></div>
+      <button class="icon-btn" id="moreButton" type="button" aria-label="更多">⋯</button>
     </header>
 
-    <nav class="main-tabs" role="tablist" aria-label="主要分頁">
-      <button id="tab-live" type="button" role="tab" aria-selected="false" aria-controls="panel-live" tabindex="-1" data-tab="live">即時</button>
-      <button id="tab-chart" type="button" role="tab" aria-selected="true" aria-controls="panel-chart" data-tab="chart">K 線</button>
-      <button id="tab-chips" type="button" role="tab" aria-selected="false" aria-controls="panel-chips" tabindex="-1" data-tab="chips">籌碼</button>
-    </nav>
-
     <main>
-      <section class="stock-summary" aria-label="股票 A 摘要">
+      <section class="stock-head" aria-label="股票 A 摘要">
         <div>
-          <h1 class="stock-name">股票 A</h1>
-          <div class="neutral-values" aria-label="不顯示代號與數值"><span>—</span><span>—</span></div>
+          <div class="stock-id"><h1>股票 A</h1><span>—</span></div>
+          <div class="price"><strong>—</strong><span>—</span></div>
         </div>
-        <button class="source-button" id="sourceButton" type="button">資料說明</button>
+        <button class="source-btn" id="sourceButton" type="button">資料說明</button>
       </section>
 
-      <section id="panel-live" role="tabpanel" aria-labelledby="tab-live" hidden>
-        <div class="status-card"><div><small>目前狀態</small><strong>可查看即時變化區塊</strong></div><span class="status-dot" aria-hidden="true"></span></div>
-        <div class="simple-panel">
-          <div class="abstract-field" role="img" aria-label="沒有實際量值的即時相對狀態圖">
-            <div class="pulse-row" aria-hidden="true"><i></i><i></i><i></i></div>
-            <div class="field-copy"><small>即時</small><strong>所選時間點資訊</strong></div>
-          </div>
-          <button class="detail-card next-card" type="button" data-open-guide data-guide-target="0"><strong>查看目前狀態</strong><span>展開 ›</span></button>
-        </div>
+      <div class="demo-flag">中立內容 · 不對應真實市場資料</div>
+
+      <section class="verdict" aria-label="目前狀態摘要">
+        <small>目前狀態</small>
+        <strong>先看目前狀態與重點變化</strong>
       </section>
 
-      <section id="panel-chart" role="tabpanel" aria-labelledby="tab-chart">
-        <div class="status-card"><div><small>目前狀態</small><strong>可查看重點與變化</strong></div><span class="status-dot" aria-hidden="true"></span></div>
+      <button class="reels-entry" type="button" data-open-reels aria-label="開啟詳細導覽">
+        <span class="play">▶</span>
+        <span class="label"><b>詳細導覽 · 4 段查看</b><small>用滑的看：狀態 → 原因 → 注意</small></span>
+        <span class="chev">›</span>
+      </button>
 
-        <section class="chart-card" id="chartCard" aria-label="可操作的抽象圖表">
-          <div class="chart-head"><strong>K 線</strong><button id="expandChart" type="button" aria-expanded="false">展開</button></div>
-          <div class="period-switch" role="group" aria-label="切換期間">
-            <button type="button" data-period="short" aria-pressed="true">短期</button>
-            <button type="button" data-period="medium" aria-pressed="false">中期</button>
-            <button type="button" data-period="long" aria-pressed="false">長期</button>
-          </div>
-          <div class="abstract-plot" id="abstractPlot" data-period="short" role="application" tabindex="0" aria-label="抽象圖表，可點按、拖曳或使用方向鍵查看資訊">
-            <span class="shape shape-one" aria-hidden="true"></span>
-            <span class="shape shape-two" aria-hidden="true"></span>
-            <span class="shape shape-three" aria-hidden="true"></span>
-            <span class="focus-marker" aria-hidden="true"></span>
-            <span class="chart-tooltip" role="status">所選時間點資訊</span>
-            <span class="drag-hint">點按或拖曳查看資訊</span>
-          </div>
-          <p class="period-feedback" id="periodFeedback" aria-live="polite">目前顯示短期區間</p>
+      <div class="step-head"><span class="n">1</span><span class="t">目前狀態</span></div>
+      <section class="visual-card hero tappable" data-open-reels data-reel-target="1" role="button" tabindex="0" aria-label="抽象狀態圖，點看詳細導覽">
+        <div class="crop neutral-visual" aria-hidden="true"><span class="neutral-block one"></span><span class="neutral-block two"></span><span class="neutral-block three"></span></div>
+        <div class="shade"></div>
+        <div class="pill"><span class="dot"></span>所選區間資訊</div>
+        <div class="tap-hint">點圖看導覽 ›</div>
+        <div class="cap"><strong>查看所選區間的狀態變化</strong></div>
+      </section>
+
+      <div class="two-up">
+        <section class="visual-card minute tappable" data-open-reels data-reel-target="0" role="button" tabindex="0" aria-label="所選時間點資訊，點看詳細導覽">
+          <div class="crop neutral-visual" aria-hidden="true"></div>
+          <div class="shade"></div>
+          <div class="pill">所選時間點</div>
+          <div class="tap-hint">看導覽 ›</div>
+          <div class="cap"><strong>目前狀態</strong><span>查看資訊</span></div>
         </section>
+        <section class="yesterday tappable" data-open-reels data-reel-target="1" role="button" tabindex="0" aria-label="狀態摘要，點看詳細導覽">
+          <p class="k">狀態摘要 <span class="go">看導覽 ›</span></p>
+          <div class="sig-list">
+            <div class="sig"><i></i><span>目前狀態</span></div>
+            <div class="sig"><i></i><span>主要原因</span></div>
+            <div class="sig"><i></i><span>需要注意</span></div>
+          </div>
+          <div class="state">查看變化</div>
+        </section>
+      </div>
 
-        <div class="detail-grid">
-          <button class="detail-card" type="button" data-open-guide data-guide-target="1"><small>主要原因</small><strong>查看重點之間的關係</strong><span>查看原因 ›</span></button>
-          <button class="detail-card" type="button" data-open-guide data-guide-target="2"><small>需要注意</small><strong>查看狀態是否改變</strong><span>查看變化 ›</span></button>
+      <div class="step-head warn" style="margin-top:16px;"><span class="n">3</span><span class="t">需要注意的變化</span></div>
+      <section class="fund tappable" data-open-reels data-reel-target="2" role="button" tabindex="0" aria-label="相對狀態比較，點看詳細導覽">
+        <div class="fund-title"><strong>相對狀態比較</strong><span>查看變化 ›</span></div>
+        <div class="div3">
+          <div class="money"><b>狀態區塊 A</b><em>—</em><small>相對狀態</small></div>
+          <div class="vs">與</div>
+          <div class="money"><b>狀態區塊 B</b><em>—</em><small>等待更多資訊再比較</small></div>
         </div>
-        <button class="detail-card next-card" type="button" data-open-guide data-guide-target="3"><strong>下一步</strong><span>展開 ›</span></button>
-      </section>
-
-      <section id="panel-chips" role="tabpanel" aria-labelledby="tab-chips" hidden>
-        <div class="status-card"><div><small>目前狀態</small><strong>僅顯示相對區塊</strong></div><span class="status-dot" aria-hidden="true"></span></div>
-        <div class="simple-panel">
-          <div class="relative-blocks" role="img" aria-label="沒有量值或方向結論的籌碼相對區塊"><i></i><i></i><i></i></div>
-          <button class="detail-card next-card" type="button" data-open-guide data-guide-target="2"><strong>查看需要注意的變化</strong><span>展開 ›</span></button>
-        </div>
+        <p class="fund-note">只顯示相對區塊，不提供方向結論。</p>
       </section>
     </main>
 
     <footer>
-      <button class="skip-button" id="skipButton" type="button">先略過</button>
-      <button class="track-button" id="trackButton" type="button" aria-pressed="false">追蹤</button>
+      <button class="ghost" id="skipButton" type="button">先略過</button>
+      <button class="primary" id="trackButton" type="button" aria-pressed="false">追蹤後續變化</button>
     </footer>
   </div>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
   <dialog id="sourceDialog" aria-labelledby="sourceTitle">
     <div class="dialog-head"><strong id="sourceTitle">資料說明</strong><button class="dialog-close" type="button" aria-label="關閉">×</button></div>
-    <div class="dialog-body">本頁只顯示功能與操作狀態。圖形不對應任何公司、數值、日期、市場資料或交易訊號，也不提供金融判讀。</div>
+    <div class="dialog-body">本頁只顯示功能與操作狀態。所有幾何圖形、相對區塊與文字 placeholder 都不對應任何公司、數值、日期、市場資料或交易訊號。</div>
   </dialog>
-
-  <dialog id="moreDialog" aria-labelledby="moreTitle">
-    <div class="dialog-head"><strong id="moreTitle">更多</strong><button class="dialog-close" type="button" aria-label="關閉">×</button></div>
-    <div class="dialog-body">可查看資料說明，或重設本次操作狀態。</div>
-    <div class="dialog-actions"><button type="button" data-more-action="info">查看資料說明</button><button type="button" data-more-action="reset">重設狀態</button></div>
-  </dialog>
-
-  <div class="guide-overlay" id="guideOverlay" aria-hidden="true" aria-label="詳細導覽">
-    <div class="guide-top">
-      <div class="guide-segments" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i></div>
-      <button class="guide-close" type="button" data-close-guide aria-label="關閉詳細導覽">×</button>
-    </div>
-    <div class="guide-scroll" id="guideScroll">
-      <section class="guide-page" aria-label="目前狀態">
-        <div class="guide-scene scene-status" aria-hidden="true"></div><div class="guide-shade"></div>
-        <div class="guide-copy"><div class="guide-kicker">目前狀態</div><h2>先看現在的狀態</h2><p>保留資訊層級與操作位置，不顯示數值或判讀。</p></div>
-        <div class="guide-hint">上滑看主要原因</div>
-      </section>
-      <section class="guide-page" aria-label="主要原因">
-        <div class="guide-scene scene-reason" aria-hidden="true"></div><div class="guide-shade"></div>
-        <div class="guide-copy"><div class="guide-kicker">主要原因</div><h2>查看重點之間的關係</h2><p>抽象區塊只用來確認資訊順序與互動回饋。</p></div>
-        <div class="guide-hint">上滑看需要注意</div>
-      </section>
-      <section class="guide-page" aria-label="需要注意">
-        <div class="guide-scene scene-watch" aria-hidden="true"></div><div class="guide-shade"></div>
-        <div class="guide-copy"><div class="guide-kicker">需要注意</div><h2>留意狀態是否改變</h2><p>相對區塊只呈現狀態差異，不提供金融判讀。</p></div>
-        <div class="guide-hint">上滑看下一步</div>
-      </section>
-      <section class="guide-page" aria-label="下一步">
-        <div class="guide-scene scene-next" aria-hidden="true"></div><div class="guide-shade"></div>
-        <div class="guide-copy"><div class="guide-kicker">下一步</div><h2>追蹤或先略過</h2><p>選擇追蹤後仍可取消；也可以先略過，稍後再查看。</p><button class="guide-back" type="button" data-close-guide>返回總覽</button></div>
-      </section>
-    </div>
-  </div>
 
   <script src="../neutral-prototype.js"></script>
 </body>
