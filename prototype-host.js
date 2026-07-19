@@ -62,25 +62,26 @@
     },
     v5: {
       src: "versions/version-neutral-light-v5.html",
-      mapping: "V5 · Guided UX Flow Candidate",
-      title: "H8 Guided UX Flow Candidate",
+      mapping: "V5 · Contextual Card Flow Candidate",
+      title: "H8 Contextual Card Flow Candidate",
       annotationTitle: "V5 流程候選 · Review Mode",
-      annotationSummary: "從股票 A 的個股首頁出發，測試單一入口、Card Rail、四步導覽與頁內決策；這不是 App 首頁或正式產品方向。",
+      annotationSummary: "從股票 A 的個股首頁出發，測試卡片情境入口、Card Rail、垂直閱讀與頁內決策；這不是 App 首頁或正式產品方向。",
       annotations: [
         "<b>Individual stock home／個股首頁。</b>流程起點是股票 A 的個股頁；返回總覽只代表回到這檔股票的個股首頁。",
-        "<b>Single guided entry。</b>只有一個 Reel 入口，固定由籌碼開始，依序閱讀價格、量能與下一步。",
-        "<b>A／B／C Card Rail。</b>三個資訊角色位於同一條水平 rail；一次顯示一張完整卡與下一張 peek，卡片本身不 deep-link。",
-        "<b>Gesture and keyboard parity。</b>Reel 只使用垂直前後；每頁保留可見按鈕，並支援方向鍵、Page Up/Down、Home、End 與 Escape。",
-        "<b>Decision in context。</b>第四頁直接完成追蹤或略過，提供 Undo，再選擇返回個股首頁或觸發下一支股票出口。",
+        "<b>Contextual card entry。</b>移除上方 guided CTA；A／B／C 卡片分別 deep-link 到對應 Reel。",
+        "<b>Path plus Card Rail。</b>精簡路徑先說明三個面向如何串接；同一條水平 rail 顯示一張完整卡與下一張 peek，C 卡直接標出待確認風險。",
+        "<b>Gesture and keyboard parity。</b>Reel 1–3 使用垂直前後且不顯示上／下一步按鈕；支援方向鍵、Page Up/Down、Home、End 與 Escape。",
+        "<b>Decision in context。</b>第四頁左滑略過、右滑加入自選股；保留可見按鈕、完成回饋與 Undo，再選擇返回個股首頁或下一支股票。",
+        "<b>Known risks。</b>仍需真人驗證 Card Rail 的斜向手勢、B／C deep-link 的進度理解，以及第四頁條件式手勢是否誤觸。",
         "<b>Validation boundary。</b>保留 V4 視覺與 sample story；V5 是可測 wireframe，尚未經真人驗證。",
       ],
-      annotationFoot: "V5 只驗證 UX Flow 候選；追蹤狀態限當次 tab，下一支股票目前只送出 placeholder event。",
+      annotationFoot: "V5 只驗證 UX Flow 候選；自選狀態限當次 tab，下一支股票目前只送出 placeholder event。",
     },
   };
   const DEFAULT_VERSION = "v1";
 
   // 相容舊網址參數（1.2→v1、1.3→v2）
-  const LEGACY = { "1.2": "v1", "1.3": "v2", "1.1": "v1", neutral: "v3", light: "v4", guided: "v5" };
+  const LEGACY = { "1.2": "v1", "1.3": "v2", "1.1": "v1", neutral: "v3", light: "v4", guided: "v5", contextual: "v5" };
 
   const frame = document.getElementById("prototypeFrame");
   const mapping = document.getElementById("versionMapping");
@@ -150,7 +151,7 @@
       showToast(message);
     }
     if (event.data.type === "prototype:tracked") {
-      showToast(event.data.tracked ? "已追蹤後續變化" : "已取消追蹤");
+      showToast(event.data.tracked ? "已加入自選股" : "已取消追蹤");
     }
     if (event.data.type === "prototype:decision-undo") {
       showToast("已復原剛才的選擇");

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light">
-  <title>股票 A｜V5 Guided UX Flow</title>
+  <title>股票 A｜V5 Contextual UX Flow</title>
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../neutral-prototype-v5.css">
 </head>
@@ -22,7 +22,6 @@
           <div class="stock-id"><h1>股票 A</h1><span>SIM-A</span></div>
           <div class="observation"><small>目前觀察狀態</small><strong>多方訊號形成中</strong></div>
         </div>
-        <button class="source-btn" id="sourceButton" type="button">資料說明</button>
       </section>
 
       <section class="verdict" aria-label="股票 A 綜合判讀">
@@ -31,43 +30,51 @@
         <span class="verdict-note">籌碼先出現變化，價格已有反應，量能仍需後續確認。</span>
       </section>
 
-      <button class="guided-entry" id="guidedEntry" type="button">
-        <span class="entry-icon" aria-hidden="true">▶</span>
-        <span class="entry-copy"><b>用 1 分鐘看懂這次判讀</b><small>依序看籌碼、價格、量能，再決定下一步</small></span>
-        <span class="entry-meta">4 步 <span aria-hidden="true">›</span></span>
-      </button>
+      <section class="path-section" aria-labelledby="pathTitle">
+        <div class="section-head section-head--path">
+          <div><strong id="pathTitle">判讀路徑</strong><span>三個面向如何接在一起</span></div>
+        </div>
+        <ol class="signal-path" aria-label="籌碼、價格、量能的判讀順序">
+          <li class="is-confirmed"><span>01</span><b>籌碼動向</b><small>持續增加</small></li>
+          <li class="is-confirmed"><span>02</span><b>價格位置</b><small>已有反應</small></li>
+          <li class="is-pending"><span>03</span><b>量能確認</b><small>尚待確認</small></li>
+        </ol>
+      </section>
 
       <section class="rail-section" aria-labelledby="railTitle">
         <div class="section-head">
-          <div><strong id="railTitle">三個判讀面向</strong><span>先預覽，進入後依序閱讀</span></div>
+          <div><strong id="railTitle">三個判讀面向</strong><span>點卡片進入；左右滑動預覽</span></div>
           <span class="swipe-label" aria-hidden="true">左右滑動</span>
         </div>
 
-        <div class="signal-rail" id="signalRail" tabindex="0" role="region" aria-label="三個判讀面向，可用左右方向鍵瀏覽">
-          <article class="signal-card" data-rail-index="0">
+        <div class="signal-rail" id="signalRail" role="region" aria-label="三個判讀面向，可左右滑動或使用方向鍵瀏覽；點卡片進入對應頁面">
+          <button class="signal-card" type="button" data-rail-index="0" data-reel-target="0">
             <div class="signal-card-head"><span>資訊候選 A｜籌碼動向</span><i></i></div>
             <div class="mini-diagram chip-diagram" aria-hidden="true">
               <span></span><span></span><span></span><span></span><span></span>
             </div>
             <strong>法人籌碼持續增加</strong>
             <p>主要參與者買盤延續，持股分布逐漸集中。</p>
-          </article>
+            <span class="card-entry">進入查看 <span aria-hidden="true">›</span></span>
+          </button>
 
-          <article class="signal-card" data-rail-index="1">
+          <button class="signal-card" type="button" data-rail-index="1" data-reel-target="1">
             <div class="signal-card-head"><span>資訊候選 B｜價格位置</span><i></i></div>
             <div class="mini-diagram price-diagram" aria-hidden="true"><span></span></div>
             <strong>價格位於短期參考區上方</strong>
             <p>價格維持在近期區間偏上位置，暫未回到整理區。</p>
-          </article>
+            <span class="card-entry">進入查看 <span aria-hidden="true">›</span></span>
+          </button>
 
-          <article class="signal-card" data-rail-index="2">
-            <div class="signal-card-head"><span>資訊候選 C｜量能確認</span><i class="is-pending"></i></div>
+          <button class="signal-card signal-card--pending" type="button" data-rail-index="2" data-reel-target="2">
+            <div class="signal-card-head"><span>資訊候選 C｜尚待確認</span><i class="is-pending"></i></div>
             <div class="mini-diagram volume-diagram" aria-hidden="true">
               <span></span><span></span><span></span><span></span><span></span><span></span>
             </div>
             <strong>成交量尚未明顯擴大</strong>
-            <p>市場參與程度仍接近近期常態，仍需後續觀察。</p>
-          </article>
+            <p>市場參與程度仍接近常態，這是目前最需要留意的部分。</p>
+            <span class="card-entry">查看疑點 <span aria-hidden="true">›</span></span>
+          </button>
         </div>
 
         <div class="rail-dots" aria-hidden="true">

@@ -6,9 +6,7 @@
   const STORAGE_KEY = "h8-prototype-v5-tracked";
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const app = document.getElementById("appRoot");
-  const guidedEntry = document.getElementById("guidedEntry");
   const sourceDialog = document.getElementById("sourceDialog");
-  const sourceButton = document.getElementById("sourceButton");
   const moreButton = document.getElementById("moreButton");
   const backButton = document.getElementById("backButton");
   const rail = document.getElementById("signalRail");
@@ -50,7 +48,6 @@
   }
 
   wireDialog(sourceDialog);
-  sourceButton.addEventListener("click", () => sourceDialog.showModal());
 
   const moreDialog = document.createElement("dialog");
   moreDialog.className = "v5-dialog";
@@ -59,7 +56,7 @@
       <strong>V5 測試選項</strong>
       <button class="dialog-close" type="button" aria-label="關閉">×</button>
     </div>
-    <div class="dialog-body">V5 只測試從個股首頁進入判讀、完成決定，再返回或前往下一支股票的流程。</div>
+    <div class="dialog-body">V5 只測試從個股首頁的資訊卡進入判讀、完成決定，再返回或前往下一支股票的流程。</div>
     <div class="dialog-actions">
       <button type="button" data-more-action="info">查看資料說明</button>
       <button class="is-primary" type="button" data-more-action="reset">重設追蹤狀態</button>
@@ -104,13 +101,14 @@
     railDots.forEach((dot, dotIndex) => dot.classList.toggle("is-on", dotIndex === index));
   }
 
-  function moveRail(index) {
+  function moveRail(index, options = {}) {
     const boundedIndex = Math.max(0, Math.min(railCards.length - 1, index));
     rail.scrollTo({
       left: railCards[boundedIndex].offsetLeft - rail.offsetLeft,
       behavior: reducedMotion.matches ? "auto" : "smooth"
     });
     updateRailDots(boundedIndex);
+    if (options.focus) railCards[boundedIndex].focus({ preventScroll: true });
   }
 
   let railScrollFrame = 0;
@@ -121,7 +119,8 @@
   rail.addEventListener("keydown", (event) => {
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
     event.preventDefault();
-    moveRail(railIndex() + (event.key === "ArrowRight" ? 1 : -1));
+    const currentIndex = Number(event.target.closest(".signal-card")?.dataset.railIndex ?? railIndex());
+    moveRail(currentIndex + (event.key === "ArrowRight" ? 1 : -1), { focus: true });
   });
 
   let railPointerId = null;
@@ -129,6 +128,7 @@
   let railStartY = 0;
   let railStartScroll = 0;
   let railAxis = null;
+  let suppressRailClickUntil = 0;
   rail.addEventListener("pointerdown", (event) => {
     if (event.pointerType !== "mouse" || event.button !== 0) return;
     railPointerId = event.pointerId;
@@ -136,7 +136,6 @@
     railStartY = event.clientY;
     railStartScroll = rail.scrollLeft;
     railAxis = null;
-    rail.setPointerCapture(event.pointerId);
   });
   rail.addEventListener("pointermove", (event) => {
     if (event.pointerId !== railPointerId) return;
@@ -144,7 +143,10 @@
     const dy = event.clientY - railStartY;
     if (!railAxis && Math.hypot(dx, dy) >= 8) {
       railAxis = Math.abs(dx) >= Math.abs(dy) * 1.25 ? "x" : "y";
-      if (railAxis === "x") rail.classList.add("is-dragging");
+      if (railAxis === "x") {
+        rail.classList.add("is-dragging");
+        rail.setPointerCapture(event.pointerId);
+      }
     }
     if (railAxis !== "x") return;
     event.preventDefault();
@@ -157,7 +159,10 @@
     railPointerId = null;
     railAxis = null;
     rail.classList.remove("is-dragging");
-    if (shouldSnap) moveRail(railIndex());
+    if (shouldSnap) {
+      suppressRailClickUntil = Date.now() + 220;
+      moveRail(railIndex());
+    }
   }
   rail.addEventListener("pointerup", finishRailDrag);
   rail.addEventListener("pointercancel", finishRailDrag);
@@ -247,9 +252,10 @@
       : "";
     const decisionPanel = reel.last
       ? `<div class="decision-panel">
+          <div class="decision-gesture-hints" aria-hidden="true"><span>← 左滑略過</span><span>右滑加入自選股 →</span></div>
           <div class="decision-buttons" data-decision-buttons>
             <button class="decision-skip" type="button" data-decision="skip">先略過</button>
-            <button class="decision-track" type="button" data-decision="track" aria-pressed="false">追蹤後續變化</button>
+            <button class="decision-track" type="button" data-decision="track" aria-pressed="false">加入自選股</button>
           </div>
           <div class="decision-result" data-decision-result role="status" hidden>
             <div class="decision-result-row"><strong data-decision-title></strong><button type="button" data-decision-undo>Undo</button></div>
@@ -261,12 +267,6 @@
           </div>
         </div>`
       : "";
-    const nav = reel.last
-      ? ""
-      : `<nav class="reel-nav" aria-label="第 ${index + 1} 頁導覽">
-          <button class="reel-prev" type="button" data-guide-target="${index - 1}"${index === 0 ? " disabled" : ""}>上一步</button>
-          <button class="reel-next" type="button" data-guide-target="${index + 1}">${index === 2 ? "前往下一步" : "下一步"}</button>
-        </nav>`;
 
     return `<section class="reel${reel.last ? " reel--last" : ""}" data-reel-index="${index}" tabindex="-1" aria-label="${reel.kicker}">
       <div class="reel-body">
@@ -276,7 +276,6 @@
         <p class="reel-desc">${reel.desc}</p>
         ${money}${decisionPanel}
       </div>
-      ${nav}
     </section>`;
   }
 
@@ -339,7 +338,8 @@
     if (options.focus) focusReel(boundedIndex);
   }
 
-  function openGuide(opener = document.activeElement) {
+  function openGuide(entryIndex = 0, opener = document.activeElement) {
+    const boundedIndex = Math.max(0, Math.min(reels.length - 1, entryIndex));
     guideOpener = opener;
     decision = null;
     undoState = null;
@@ -347,8 +347,8 @@
     overlay.classList.add("is-open");
     overlay.setAttribute("aria-hidden", "false");
     app.inert = true;
-    scroller.scrollTop = 0;
-    setActive(0);
+    scroller.scrollTop = boundedIndex * (scroller.clientHeight || window.innerHeight);
+    setActive(boundedIndex);
     window.requestAnimationFrame(() => closeButton.focus({ preventScroll: true }));
   }
 
@@ -382,9 +382,9 @@
     buttons.hidden = true;
     result.hidden = false;
     exits.hidden = false;
-    overlay.querySelector("[data-decision-title]").textContent = decision === "track" ? "已追蹤後續變化" : "已略過這次查看";
+    overlay.querySelector("[data-decision-title]").textContent = decision === "track" ? "已加入自選股" : "已略過這次查看";
     overlay.querySelector("[data-decision-copy]").textContent = decision === "track"
-      ? "此狀態會保留在目前瀏覽分頁。"
+      ? "已開始追蹤後續變化；此狀態會保留在目前瀏覽分頁。"
       : "你仍可返回個股首頁，或繼續下一支股票。";
   }
 
@@ -393,7 +393,7 @@
     decision = nextDecision;
     setTracked(nextDecision === "track");
     renderDecision();
-    const message = nextDecision === "track" ? "已追蹤後續變化" : "已略過這次查看";
+    const message = nextDecision === "track" ? "已加入自選股" : "已略過這次查看";
     showToast(message);
     post(nextDecision === "track" ? "prototype:tracked" : "prototype:skip", { tracked });
     overlay.querySelector("[data-decision-undo]").focus({ preventScroll: true });
@@ -410,11 +410,16 @@
     overlay.querySelector('[data-decision="track"]').focus({ preventScroll: true });
   }
 
-  guidedEntry.addEventListener("click", () => openGuide(guidedEntry));
-  overlay.querySelectorAll("[data-close-guide]").forEach((button) => button.addEventListener("click", closeGuide));
-  overlay.querySelectorAll("[data-guide-target]").forEach((button) => {
-    button.addEventListener("click", () => moveGuide(Number(button.dataset.guideTarget), { focus: true }));
+  railCards.forEach((card) => {
+    card.addEventListener("click", (event) => {
+      if (Date.now() < suppressRailClickUntil) {
+        event.preventDefault();
+        return;
+      }
+      openGuide(Number(card.dataset.reelTarget), card);
+    });
   });
+  overlay.querySelectorAll("[data-close-guide]").forEach((button) => button.addEventListener("click", closeGuide));
   overlay.querySelectorAll("[data-decision]").forEach((button) => {
     button.addEventListener("click", () => applyDecision(button.dataset.decision));
   });
@@ -431,18 +436,50 @@
     scrollFrame = window.requestAnimationFrame(() => setActive(guideIndex()));
   }, { passive: true });
 
+  let touchStartX = 0;
   let touchStartY = 0;
+  let touchStartIndex = 0;
   let touchStartedAtEnd = false;
+  let touchStartedOnControl = false;
   scroller.addEventListener("touchstart", (event) => {
+    touchStartX = event.changedTouches[0].clientX;
     touchStartY = event.changedTouches[0].clientY;
+    touchStartIndex = activeIndex;
+    touchStartedOnControl = Boolean(event.target.closest("button"));
     const maxScroll = scroller.scrollHeight - scroller.clientHeight;
     touchStartedAtEnd = activeIndex === reels.length - 1 && Math.abs(scroller.scrollTop - maxScroll) < 4;
   }, { passive: true });
   scroller.addEventListener("touchend", (event) => {
+    const dx = event.changedTouches[0].clientX - touchStartX;
     const dy = event.changedTouches[0].clientY - touchStartY;
-    if (touchStartedAtEnd && dy < -64) closeGuide();
+    const horizontalDecision = touchStartIndex === reels.length - 1
+      && activeIndex === reels.length - 1
+      && !decision
+      && !touchStartedOnControl
+      && Math.abs(dx) >= 64
+      && Math.abs(dx) > Math.abs(dy) * 1.2;
+    if (horizontalDecision) applyDecision(dx < 0 ? "skip" : "track");
+    else if (touchStartedAtEnd && dy < -64 && Math.abs(dy) > Math.abs(dx) * 1.2) closeGuide();
     touchStartedAtEnd = false;
+    touchStartedOnControl = false;
   }, { passive: true });
+
+  let decisionPointer = null;
+  scroller.addEventListener("pointerdown", (event) => {
+    if (event.pointerType !== "mouse" || event.button !== 0 || activeIndex !== reels.length - 1 || event.target.closest("button")) return;
+    decisionPointer = { id: event.pointerId, x: event.clientX, y: event.clientY };
+  });
+  scroller.addEventListener("pointerup", (event) => {
+    if (!decisionPointer || event.pointerId !== decisionPointer.id || decision || activeIndex !== reels.length - 1) {
+      decisionPointer = null;
+      return;
+    }
+    const dx = event.clientX - decisionPointer.x;
+    const dy = event.clientY - decisionPointer.y;
+    decisionPointer = null;
+    if (Math.abs(dx) >= 64 && Math.abs(dx) > Math.abs(dy) * 1.2) applyDecision(dx < 0 ? "skip" : "track");
+  });
+  scroller.addEventListener("pointercancel", () => { decisionPointer = null; });
 
   let wheelTotal = 0;
   let wheelResetTimer;
@@ -471,6 +508,12 @@
     } else if (event.key === "ArrowUp" || event.key === "PageUp") {
       event.preventDefault();
       moveGuide(activeIndex - 1, { focus: true });
+    } else if (activeIndex === reels.length - 1 && !decision && event.key === "ArrowLeft") {
+      event.preventDefault();
+      applyDecision("skip");
+    } else if (activeIndex === reels.length - 1 && !decision && event.key === "ArrowRight") {
+      event.preventDefault();
+      applyDecision("track");
     } else if (event.key === "Home") {
       event.preventDefault();
       moveGuide(0, { focus: true });
@@ -480,6 +523,6 @@
     }
   });
 
-  window.reelsOpen = () => openGuide(guidedEntry);
+  window.reelsOpen = (index = 0) => openGuide(index, railCards[index] || railCards[0]);
   window.reelsClose = closeGuide;
 })();

@@ -85,8 +85,6 @@ main {
 .stock-head {
   display: flex;
   align-items: flex-end;
-  justify-content: space-between;
-  gap: 12px;
 }
 
 .stock-id { display: flex; align-items: baseline; gap: 7px; }
@@ -96,18 +94,8 @@ main {
 .observation small { display: block; color: var(--soft-text); font-size: 10px; font-weight: 750; letter-spacing: .06em; }
 .observation strong { display: block; margin-top: 3px; font-size: 18px; line-height: 1.25; }
 
-.source-btn {
-  min-height: 44px;
-  padding: 0 12px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  color: var(--muted);
-  background: var(--surface);
-  cursor: pointer;
-}
-
 .verdict {
-  margin: 15px 0 12px;
+  margin: 15px 0 18px;
   padding: 14px 15px;
   border: 1px solid #cad5fb;
   border-radius: 18px;
@@ -134,44 +122,7 @@ main {
 .verdict-count { color: var(--blue); font-size: 12px; font-weight: 800; white-space: nowrap; }
 .verdict-note { display: block; margin-top: 6px; color: #48516a; font-size: 12px; line-height: 1.45; }
 
-.guided-entry {
-  width: 100%;
-  min-height: 74px;
-  margin: 0 0 19px;
-  padding: 12px 13px;
-  display: grid;
-  grid-template-columns: 44px 1fr auto;
-  align-items: center;
-  gap: 11px;
-  border: 1px solid #cad5fb;
-  border-radius: 18px;
-  color: var(--text);
-  background: var(--surface);
-  box-shadow: 0 8px 24px rgba(49, 91, 214, .09);
-  cursor: pointer;
-  text-align: left;
-  transition: transform 150ms var(--ease-out), border-color 160ms ease;
-}
-
-.guided-entry:active { transform: scale(.985); }
-
-.entry-icon {
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  color: #fff;
-  background: var(--blue);
-  font-size: 13px;
-  padding-left: 2px;
-}
-
-.entry-copy { min-width: 0; }
-.entry-copy b { display: block; font-size: 14px; font-weight: 880; }
-.entry-copy small { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; line-height: 1.35; }
-.entry-meta { color: var(--blue); font-size: 11px; font-weight: 850; white-space: nowrap; }
-
+.path-section { margin-bottom: 22px; }
 .rail-section { min-width: 0; }
 
 .section-head {
@@ -185,6 +136,59 @@ main {
 .section-head strong { display: block; font-size: 14px; }
 .section-head div > span { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; }
 .swipe-label { color: var(--blue); font-size: 10px; font-weight: 800; white-space: nowrap; }
+
+.section-head--path { margin-bottom: 13px; }
+
+.signal-path {
+  position: relative;
+  margin: 0;
+  padding: 0 5px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  list-style: none;
+}
+
+.signal-path::before {
+  content: "";
+  position: absolute;
+  top: 21px;
+  left: 17%;
+  right: 17%;
+  height: 2px;
+  background: var(--line);
+}
+
+.signal-path li {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.signal-path li > span {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--soft-text);
+  background: #fff;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.signal-path li.is-confirmed > span {
+  border-color: #cad5fb;
+  color: var(--blue);
+  background: var(--blue-soft);
+}
+
+.signal-path li b { margin-top: 8px; font-size: 11px; }
+.signal-path li small { margin-top: 3px; color: var(--muted); font-size: 9px; }
+.signal-path li.is-pending small { color: var(--text); font-weight: 800; }
 
 .signal-rail {
   --rail-gap: 12px;
@@ -206,8 +210,9 @@ main {
 .signal-rail.is-dragging { cursor: grabbing; user-select: none; scroll-snap-type: none; }
 
 .signal-card {
+  appearance: none;
   flex: 0 0 calc(100% - var(--rail-gap) - var(--rail-peek));
-  min-height: 202px;
+  min-height: 220px;
   padding: 15px;
   display: flex;
   flex-direction: column;
@@ -216,7 +221,14 @@ main {
   border-radius: 20px;
   background: var(--surface);
   box-shadow: 0 6px 18px rgba(23, 25, 29, .045);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 160ms ease, transform 150ms var(--ease-out);
 }
+
+.signal-card:active { transform: scale(.985); }
+.signal-card:hover { border-color: #c4cff2; }
+.signal-card--pending { border-color: #cfd5df; }
 
 .signal-card-head {
   display: flex;
@@ -239,6 +251,13 @@ main {
 }
 
 .signal-card > p { margin: 7px 0 0; color: var(--muted); font-size: 11px; line-height: 1.45; }
+
+.card-entry {
+  margin-top: 10px;
+  color: var(--blue);
+  font-size: 10px;
+  font-weight: 850;
+}
 
 .mini-diagram {
   height: 68px;
@@ -408,7 +427,7 @@ dialog#sourceDialog::backdrop,
 
 .reel-body {
   position: absolute;
-  inset: max(66px, calc(env(safe-area-inset-top) + 58px)) 20px calc(92px + env(safe-area-inset-bottom));
+  inset: max(66px, calc(env(safe-area-inset-top) + 58px)) 20px calc(24px + env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -470,18 +489,6 @@ dialog#sourceDialog::backdrop,
 .reel-money:first-child em { color: var(--blue); }
 .reel-vs { display: grid; place-items: center; color: var(--blue); font-size: 10px; font-weight: 900; }
 
-.reel-nav {
-  position: absolute;
-  z-index: 3;
-  left: 16px;
-  right: 16px;
-  bottom: calc(14px + env(safe-area-inset-bottom));
-  display: grid;
-  grid-template-columns: 1fr 1.45fr;
-  gap: 10px;
-}
-
-.reel-nav button,
 .decision-buttons button,
 .decision-exits button,
 .decision-result button {
@@ -491,17 +498,23 @@ dialog#sourceDialog::backdrop,
   cursor: pointer;
 }
 
-.reel-prev { border: 1px solid var(--line); background: #fff; }
-.reel-next { border: 0; color: #fff; background: var(--blue); }
-.reel-prev:disabled { color: #adb2ba; background: var(--surface-2); cursor: default; }
-
 .reel--last .reel-body {
   inset: max(72px, calc(env(safe-area-inset-top) + 62px)) 20px calc(24px + env(safe-area-inset-bottom));
 }
 
 .reel--last .reel-head { margin-top: 14px; }
 
-.decision-panel { width: min(100%, 350px); margin-top: 22px; }
+.decision-panel { width: min(100%, 350px); margin-top: 20px; }
+.decision-gesture-hints {
+  margin-bottom: 9px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 750;
+}
+.decision-gesture-hints span:last-child { color: var(--blue); }
 .decision-buttons { display: grid; grid-template-columns: 1fr 1.35fr; gap: 10px; }
 .decision-skip { border: 1px solid var(--line); background: #fff; }
 .decision-track { border: 0; color: #fff; background: var(--blue); }

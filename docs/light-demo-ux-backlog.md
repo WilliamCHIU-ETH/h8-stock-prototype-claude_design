@@ -1,26 +1,36 @@
 # Light Demo UX Backlog
 
-## V5 Guided UX Flow Candidate｜2026-07-20
+## V5 Contextual Card Flow Candidate｜2026-07-20
 
-狀態：已建立可操作 wireframe，等待真人操作驗證；這是候選，不是正式產品決策。
+狀態：已依第一次操作回饋修正 wireframe，等待完整真人驗證；這是候選，不是正式產品決策。
 
 - **流程起點**：股票 A 的個股首頁，不是 App 首頁。
-- **Entry Architecture**：只保留一個 guided Reel 入口，固定由資訊候選 A 開始。
-- **Card Rail**：A／B／C 位於同一條水平 rail；一次顯示一張完整卡與下一張 48px peek。卡片只供預覽，不 deep-link。
-- **Reel 1–3**：上滑／下滑前後閱讀，左右不觸發；另提供可見按鈕與鍵盤等價操作。
-- **Reel 4**：在 overlay 內完成追蹤或略過，可 Undo；上滑、Arrow Down 或可見按鈕可返回個股首頁。
-- **流程出口**：返回個股首頁是主要出口；「下一支股票」只送出可測 placeholder event，不新增第二檔 sample。
-- **狀態**：追蹤保存於當次 tab 的 `sessionStorage`；略過不跨 session。
+- **Entry Architecture**：移除上方 guided CTA；A／B／C 卡片是唯一的 contextual Reel 入口，分別進入 Reel 1／2／3。
+- **首頁理解**：保留一條精簡的 01→02→03 判讀路徑；C 卡直接標出「尚待確認」與目前最需留意的部分。
+- **Card Rail**：A／B／C 位於同一條水平 rail；一次顯示一張完整卡與下一張 48px peek，點卡片 deep-link 對應內容。
+- **Reel 1–3**：上滑／下滑前後閱讀，左右不觸發；移除「上一步／下一步」按鈕，鍵盤以 Arrow Up/Down、Page Up/Down、Home、End 操作。
+- **Reel 4**：左滑＝先略過；右滑＝加入自選股並追蹤後續變化；同時保留可見按鈕、完成回饋與 Undo。
+- **流程出口**：關閉或第四頁繼續上滑返回這檔股票的個股首頁；完成決策後，另以明確按鈕觸發「下一支股票」。
+- **資料說明**：只用來揭露 sample data 與非投資建議邊界，移至「⋯」選單，不占首頁主要層級。
+- **狀態**：加入自選股保存於當次 tab 的 `sessionStorage`；略過不跨 session；「下一支股票」仍是 placeholder event。
 - **驗證邊界**：V5 保留 V4 亮白／淺灰／黑字／單一藍色、sample story 與 A／B／C 資訊角色；尚未經真人驗證。
 
-## 本輪 Decision Lock
+### 仍需真人驗證的問題
+
+- **Axis ownership**：Card Rail 只接管明確的水平拖曳；個股首頁仍須能自然垂直捲動，需特別測斜向手勢。
+- **Contextual entry**：從 B 或 C 進入時會從第 2／3 頁開始；進度條是否足以讓人理解前面仍有內容，尚未驗證。
+- **Conditional gesture**：左右手勢只在第 4 頁代表決策；頁面已提供方向提示與按鈕替代，但仍要觀察是否會誤觸。
+- **Discoverability trade-off**：資料說明移入「⋯」後首頁更乾淨，但 sample／免責資訊的可發現性會降低。
+- **State expectation**：目前只在同一個 tab 保存自選狀態，尚未接上真實自選股資料或跨裝置同步。
+
+## V4 建立時的 Decision Lock（歷史紀錄）
 
 - **已接受的候選**：V4 Light Demo 的亮白、淺灰、黑字與單一藍色視覺方向。
 - **本輪允許變更**：視覺層次、component presentation、sample content 與文件。
 - **本輪凍結**：點擊入口、上下滑、左右滑、返回、追蹤與略過的行為。
 - **停止條件**：不在本輪實作下列 UX 待辦；先保留可回溯的 V3／V4 HTML。
 
-## 下一輪優先待辦
+## 原始 Journey Audit（V5 candidate 已回應，保留問題脈絡）
 
 ### UX-01｜收斂 Reel 入口
 
