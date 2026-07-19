@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="color-scheme" content="dark">
-  <title>股票 A｜中立內容導覽</title>
+  <title>股票 A｜多方轉強示意</title>
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <style>
     :root {
@@ -100,6 +100,7 @@
     }
     .verdict small { display: block; margin-bottom: 5px; color: var(--amber); font-size: 10px; font-weight: 900; letter-spacing: .12em; }
     .verdict strong { display: block; font-size: 20px; line-height: 1.3; }
+    .verdict-note { display: block; margin-top: 5px; color: #c8ccd2; font-size: 12px; line-height: 1.45; }
 
     .reels-entry {
       width: 100%; margin: 0 0 18px; padding: 14px 15px;
@@ -189,8 +190,9 @@
 
     .hero { height: 236px; }
     .hero .crop { inset: 0; }
-    .hero .cap { position: absolute; z-index: 2; left: 13px; right: 13px; bottom: 13px; }
+    .hero .cap { position: absolute; z-index: 2; left: 13px; right: 13px; top: 50%; transform: translateY(-50%); text-align: center; }
     .hero .cap strong { display: block; color: var(--text); font-size: 19px; line-height: 1.25; }
+    .hero .cap span { display: block; margin-top: 6px; color: #c8ccd2; font-size: 12px; }
 
     .two-up { margin-top: 12px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 10px; }
     .minute { height: 150px; }
@@ -199,9 +201,9 @@
     .minute .neutral-visual::before { width: 72%; height: 11px; left: 7%; top: 45%; }
     .minute .neutral-visual::after { width: 45%; height: 9px; top: 61%; }
     .minute .neutral-block { display: none; }
-    .minute .cap { position: absolute; z-index: 2; left: 11px; right: 11px; bottom: 11px; display: flex; align-items: baseline; justify-content: space-between; }
+    .minute .cap { position: absolute; z-index: 2; left: 11px; right: 11px; top: 50%; transform: translateY(-42%); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
     .minute .cap strong { font-size: 15px; font-weight: 800; }
-    .minute .cap span { color: var(--amber); font-size: 12px; font-weight: 800; }
+    .minute .cap span { margin-top: 4px; color: var(--amber); font-size: 12px; font-weight: 800; }
 
     .yesterday { height: 150px; padding: 13px; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(145deg,#20242b,#14161b); display: flex; flex-direction: column; }
     .yesterday .k { margin: 0 0 11px; display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: .08em; }
@@ -259,69 +261,68 @@
   <div class="app" id="appRoot">
     <header class="topbar">
       <button class="icon-btn" id="backButton" type="button" aria-label="返回">‹</button>
-      <div class="top-title"><strong>目前狀態</strong><span>中立內容</span></div>
+      <div class="top-title"><strong>股票 A</strong><span>多方訊號示意</span></div>
       <button class="icon-btn" id="moreButton" type="button" aria-label="更多">⋯</button>
     </header>
 
     <main>
       <section class="stock-head" aria-label="股票 A 摘要">
         <div>
-          <div class="stock-id"><h1>股票 A</h1><span>—</span></div>
-          <div class="price"><strong>—</strong><span>—</span></div>
+          <div class="stock-id"><h1>股票 A</h1><span>SIM-A</span></div>
+          <div class="price"><strong>52.4</strong><span>+2.3%</span></div>
         </div>
         <button class="source-btn" id="sourceButton" type="button">資料說明</button>
       </section>
 
-      <div class="demo-flag">中立內容 · 不對應真實市場資料</div>
-
-      <section class="verdict" aria-label="目前狀態摘要">
-        <small>目前狀態</small>
-        <strong>先看目前狀態與重點變化</strong>
+      <section class="verdict" aria-label="股票 A 綜合判讀">
+        <small>綜合判讀</small>
+        <strong>多方轉強</strong>
+        <span class="verdict-note">籌碼與價格同步改善，量能仍待確認</span>
       </section>
 
       <button class="reels-entry" type="button" data-open-reels aria-label="開啟詳細導覽">
         <span class="play">▶</span>
-        <span class="label"><b>詳細導覽 · 4 段查看</b><small>用滑的看：狀態 → 原因 → 注意</small></span>
+        <span class="label"><b>展開 3 個訊號＋下一步</b><small>用滑的看：籌碼 → 價格 → 風險</small></span>
         <span class="chev">›</span>
       </button>
 
-      <div class="step-head"><span class="n">1</span><span class="t">目前狀態</span></div>
-      <section class="visual-card hero tappable" data-open-reels data-reel-target="1" role="button" tabindex="0" aria-label="抽象狀態圖，點看詳細導覽">
+      <div class="step-head"><span class="n">3</span><span class="t">個多方訊號</span></div>
+      <section class="visual-card hero tappable" data-open-reels data-reel-target="1" role="button" tabindex="0" aria-label="價格訊號，點看詳細說明">
         <div class="crop neutral-visual" aria-hidden="true"><span class="neutral-block one"></span><span class="neutral-block two"></span><span class="neutral-block three"></span></div>
         <div class="shade"></div>
-        <div class="pill"><span class="dot"></span>所選區間資訊</div>
-        <div class="tap-hint">點圖看導覽 ›</div>
-        <div class="cap"><strong>查看所選區間的狀態變化</strong></div>
+        <div class="pill"><span class="dot"></span>價格訊號</div>
+        <div class="tap-hint">看證據 ›</div>
+        <div class="cap"><strong>站上短中期均線</strong><span>價格結構轉強</span></div>
       </section>
 
       <div class="two-up">
-        <section class="visual-card minute tappable" data-open-reels data-reel-target="0" role="button" tabindex="0" aria-label="所選時間點資訊，點看詳細導覽">
+        <section class="visual-card minute tappable" data-open-reels data-reel-target="0" role="button" tabindex="0" aria-label="籌碼訊號，點看詳細說明">
           <div class="crop neutral-visual" aria-hidden="true"></div>
           <div class="shade"></div>
-          <div class="pill">所選時間點</div>
-          <div class="tap-hint">看導覽 ›</div>
-          <div class="cap"><strong>目前狀態</strong><span>查看資訊</span></div>
+          <div class="pill">籌碼訊號</div>
+          <div class="tap-hint">看證據 ›</div>
+          <div class="cap"><strong>外資連買</strong><span>3 日</span></div>
         </section>
-        <section class="yesterday tappable" data-open-reels data-reel-target="1" role="button" tabindex="0" aria-label="狀態摘要，點看詳細導覽">
-          <p class="k">狀態摘要 <span class="go">看導覽 ›</span></p>
+        <section class="yesterday tappable" data-open-reels data-reel-target="1" role="button" tabindex="0" aria-label="價格確認摘要，點看詳細說明">
+          <p class="k">價格確認 <span class="go">看證據 ›</span></p>
           <div class="sig-list">
-            <div class="sig"><i></i><span>目前狀態</span></div>
-            <div class="sig"><i></i><span>主要原因</span></div>
-            <div class="sig"><i></i><span>需要注意</span></div>
+            <div class="sig"><i></i><span>站上 5 日線</span></div>
+            <div class="sig"><i></i><span>站上 20 日線</span></div>
+            <div class="sig"><i></i><span>短均線上彎</span></div>
           </div>
-          <div class="state">查看變化</div>
+          <div class="state">價格結構轉強</div>
         </section>
       </div>
 
-      <div class="step-head warn" style="margin-top:16px;"><span class="n">3</span><span class="t">需要注意的變化</span></div>
-      <section class="fund tappable" data-open-reels data-reel-target="2" role="button" tabindex="0" aria-label="相對狀態比較，點看詳細導覽">
-        <div class="fund-title"><strong>相對狀態比較</strong><span>查看變化 ›</span></div>
+      <div class="step-head warn" style="margin-top:16px;"><span class="n">!</span><span class="t">風險提醒</span></div>
+      <section class="fund tappable" data-open-reels data-reel-target="2" role="button" tabindex="0" aria-label="量能風險，點看詳細說明">
+        <div class="fund-title"><strong>量能尚未確認</strong><span>看證據 ›</span></div>
         <div class="div3">
-          <div class="money"><b>狀態區塊 A</b><em>—</em><small>相對狀態</small></div>
-          <div class="vs">與</div>
-          <div class="money"><b>狀態區塊 B</b><em>—</em><small>等待更多資訊再比較</small></div>
+          <div class="money"><b>今日成交量</b><em>1.1×</em><small>相較 20 日均量</small></div>
+          <div class="vs">對比</div>
+          <div class="money"><b>確認狀態</b><em>未達</em><small>尚未明顯放大</small></div>
         </div>
-        <p class="fund-note">只顯示相對區塊，不提供方向結論。</p>
+        <p class="fund-note">多方訊號出現，但市場參與度仍待確認。</p>
       </section>
     </main>
 
@@ -333,7 +334,7 @@
 
   <dialog id="sourceDialog" aria-labelledby="sourceTitle">
     <div class="dialog-head"><strong id="sourceTitle">資料說明</strong><button class="dialog-close" type="button" aria-label="關閉">×</button></div>
-    <div class="dialog-body">本頁只顯示功能與操作狀態。所有幾何圖形、相對區塊與文字 placeholder 都不對應任何公司、數值、日期、市場資料或交易訊號。</div>
+    <div class="dialog-body">本頁以虛構股票 A 示範「外資連續買超、均線轉強、量能尚未明顯放大」。所有公司、價格與指標數值皆為 sample data，不對應真實市場資料或交易建議。</div>
   </dialog>
 
   <script src="../neutral-prototype.js"></script>

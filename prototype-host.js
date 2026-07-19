@@ -26,28 +26,45 @@
         "<b>Navigation behavior。</b>支援 scroll snap、左滑返回、關閉與 Escape。",
         "<b>Content dependency。</b>版面較簡潔，但仍依賴真實公司、價格、日期、圖表與判讀文案。",
       ],
-      annotationFoot: "V2 baseline 保留不變；本輪是 Neutral Test 唯一的 layout source of truth 與行為參照。",
+      annotationFoot: "V2 baseline 保留不變；本輪是 Sample IA Test 唯一的 layout source of truth 與行為參照。",
     },
     v3: {
       src: "versions/version-neutral.html",
-      mapping: "V3 · Neutral Test",
-      title: "H8 Neutral Test",
+      mapping: "V3 · Sample IA Test",
+      title: "H8 Sample IA Test",
       annotationTitle: "V3 元件與限制 · Review Mode",
-      annotationSummary: "V2 layout-preserving abstraction：框外說明元件用途、互動與限制；手機 viewport 只顯示可供受測者操作的中立內容。",
+      annotationSummary: "V2 layout-preserving fictional scenario：框外說明測試邊界；手機 viewport 以虛構股票 A 呈現可理解的 sample content。",
       annotations: [
         "<b>V2 component parity。</b>沿用相同 topbar、摘要、判讀、導覽入口、卡片順序、雙欄區、比較卡與 footer；不增加頁面級元件。",
-        "<b>Content-only abstraction。</b>只替換既有槽位內的公司、數值、日期、圖像與判讀內容；外層 geometry 維持 V2 排版。",
+        "<b>Summary／evidence split。</b>首頁壓縮為多方轉強與三個訊號；滑動頁才展開籌碼、價格與量能的 sample evidence。",
+        "<b>Fictional sample data。</b>股票 A、52.4、外資連買 3 日與量能 1.1 倍均為示意資料，不對應真實標的或投資建議。",
         "<b>Cards／reels。</b>既有入口與卡片可進入四段垂直 scroll snap；支援左滑、close、back、Escape 與鍵盤。",
         "<b>Actions／persistence。</b>追蹤可切換並保留於同一瀏覽 session；略過與重設都有成功回饋。",
-        "<b>Known limit。</b>本候選只測 V2 排版下的互動與資訊架構；目前灰階加 amber 色票不是最終決策，也不驗證金融內容或正式產品方向。",
+        "<b>Known limit。</b>第四段與追蹤／略過行為維持凍結；目前灰階加 amber 色票不是最終決策，也不驗證金融內容或正式產品方向。",
       ],
-      annotationFoot: "Neutral Test 是 V2 layout-preserving abstraction 的獨立實驗候選；不覆蓋 V1／V2，也不代表已驗證決策。",
+      annotationFoot: "Sample IA Test 是 V2 layout-preserving 的獨立實驗候選；不覆蓋 V1／V2，也不代表已驗證決策。",
+    },
+    v4: {
+      src: "versions/version-neutral-light.html",
+      mapping: "V4 · Light Semantic Demo",
+      title: "H8 亮白語意 Demo",
+      annotationTitle: "V4 元件與限制 · Review Mode",
+      annotationSummary: "保留 V3 作為現況；V4 只驗證亮白視覺系統與重新整理後的首頁語意。",
+      annotations: [
+        "<b>Four-layer semantics。</b>首頁依序回答觀察狀態、綜合判讀、三段判讀路徑與可展開的細節入口。",
+        "<b>Summary／detail separation。</b>首頁說明籌碼、價格與量能如何串接；Reel 才展開每個面向的 sample story。",
+        "<b>Light visual system。</b>亮白背景、淺灰層次、黑色文字與單一藍色強調；紅綠與精確行情不作為視覺主體。",
+        "<b>Interaction parity。</b>沿用 V3 的卡片入口、四段 scroll snap、指定頁開啟、Escape、關閉與返回行為。",
+        "<b>Reversible candidate。</b>V4 為獨立 HTML 候選，不覆蓋 V3；可單獨保留或刪除。",
+        "<b>Known limit。</b>內容仍是假設性的 sample story，第四段決策行為維持凍結，尚未進行真人驗證。",
+      ],
+      annotationFoot: "Light Semantic Demo 只比較內容層級與視覺語言；不代表亮白版已成為正式產品方向。",
     },
   };
   const DEFAULT_VERSION = "v1";
 
   // 相容舊網址參數（1.2→v1、1.3→v2）
-  const LEGACY = { "1.2": "v1", "1.3": "v2", "1.1": "v1", neutral: "v3" };
+  const LEGACY = { "1.2": "v1", "1.3": "v2", "1.1": "v1", neutral: "v3", light: "v4" };
 
   const frame = document.getElementById("prototypeFrame");
   const mapping = document.getElementById("versionMapping");
