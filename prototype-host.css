@@ -189,8 +189,31 @@ a { font: inherit; }
   .prototype-title strong { font-size: 13px; }
   .prototype-title span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .direct-link { grid-column: 2; grid-row: 1; font-size: 11px; }
-  .version-switch { grid-column: 1 / -1; grid-row: 2; width: 100%; }
-  .version-switch button { min-height: 34px; padding-inline: 8px; }
+  .version-switch {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 4px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .version-switch::-webkit-scrollbar { display: none; }
+
+  .version-switch button {
+    flex: 0 0 auto;
+    min-width: 64px;
+    min-height: 34px;
+    padding-inline: 12px;
+    white-space: nowrap;
+    scroll-snap-align: center;
+  }
 
   .prototype-stage {
     min-height: calc(100dvh - 88px);
