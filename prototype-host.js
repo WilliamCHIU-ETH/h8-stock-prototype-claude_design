@@ -26,12 +26,12 @@
         "<b>Navigation behavior。</b>支援 scroll snap、左滑返回、關閉與 Escape。",
         "<b>Content dependency。</b>版面較簡潔，但仍依賴真實公司、價格、日期、圖表與判讀文案。",
       ],
-      annotationFoot: "V2 baseline 保留不變；本輪是 Sample IA Test 唯一的 layout source of truth 與行為參照。",
+      annotationFoot: "V2 baseline 保留不變；本輪是 Simple IA Test 唯一的 layout source of truth 與行為參照。",
     },
     v3: {
       src: "versions/version-neutral.html",
-      mapping: "V3 · Sample IA Test",
-      title: "H8 Sample IA Test",
+      mapping: "V3 · Simple IA Test",
+      title: "H8 Simple IA Test",
       annotationTitle: "V3 元件與限制 · Review Mode",
       annotationSummary: "V2 layout-preserving fictional scenario：框外說明測試邊界；手機 viewport 以虛構股票 A 呈現可理解的 sample content。",
       annotations: [
@@ -42,11 +42,11 @@
         "<b>Actions／persistence。</b>追蹤可切換並保留於同一瀏覽 session；略過與重設都有成功回饋。",
         "<b>Known limit。</b>第四段與追蹤／略過行為維持凍結；目前灰階加 amber 色票不是最終決策，也不驗證金融內容或正式產品方向。",
       ],
-      annotationFoot: "Sample IA Test 是 V2 layout-preserving 的獨立實驗候選；不覆蓋 V1／V2，也不代表已驗證決策。",
+      annotationFoot: "Simple IA Test 是 V2 layout-preserving 的獨立實驗候選；不覆蓋 V1／V2，也不代表已驗證決策。",
     },
     v4: {
       src: "versions/version-neutral-light.html",
-      mapping: "V4 · Light Semantic Demo",
+      mapping: "V4 · Lite Demo",
       title: "H8 亮白語意 Demo",
       annotationTitle: "V4 元件與限制 · Review Mode",
       annotationSummary: "保留 V3 作為現況；V4 只驗證亮白視覺系統與重新整理後的首頁語意。",
@@ -58,7 +58,7 @@
         "<b>Reversible candidate。</b>V4 為獨立 HTML 候選，不覆蓋 V3；可單獨保留或刪除。",
         "<b>Known limit。</b>內容仍是假設性的 sample story，第四段決策行為維持凍結，尚未進行真人驗證。",
       ],
-      annotationFoot: "Light Semantic Demo 只比較內容層級與視覺語言；不代表亮白版已成為正式產品方向。",
+      annotationFoot: "Lite Demo 只比較內容層級與視覺語言；不代表亮白版已成為正式產品方向。",
     },
     v5: {
       src: "versions/version-neutral-light-v5.html",
@@ -78,7 +78,7 @@
       annotationFoot: "V5 只驗證 UX Flow 候選；自選狀態限當次 tab，下一支股票目前只送出 placeholder event。",
     },
   };
-  const DEFAULT_VERSION = "v1";
+  const DEFAULT_VERSION = "v5";
 
   // 相容舊網址參數（1.2→v1、1.3→v2）
   const LEGACY = { "1.2": "v1", "1.3": "v2", "1.1": "v1", neutral: "v3", light: "v4", guided: "v5", contextual: "v5" };
@@ -90,8 +90,11 @@
   const annotationSummary = document.getElementById("annotationSummary");
   const annotationList = document.getElementById("annotationList");
   const annotationFoot = document.getElementById("annotationFoot");
+  const versionSwitch = document.querySelector(".version-switch");
   const buttons = [...document.querySelectorAll("[data-version]")];
   const toast = document.getElementById("hostToast");
+  const mobileVersionQuery = window.matchMedia("(max-width: 640px)");
+  const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   let toastTimer;
 
   function normalizeVersion(value) {
@@ -106,12 +109,26 @@
     toastTimer = window.setTimeout(() => toast.classList.remove("is-visible"), 1800);
   }
 
+  function revealActiveVersion(activeButton, animate) {
+    if (!activeButton || !mobileVersionQuery.matches) return;
+
+    window.requestAnimationFrame(() => {
+      versionSwitch.scrollTo({
+        left: activeButton.offsetLeft - (versionSwitch.clientWidth - activeButton.offsetWidth) / 2,
+        behavior: animate && !reducedMotionQuery.matches ? "smooth" : "auto",
+      });
+    });
+  }
+
   function activate(version, updateUrl = true) {
     const normalized = normalizeVersion(version);
     const config = versions[normalized];
+    let activeButton;
 
     buttons.forEach((button) => {
-      button.setAttribute("aria-pressed", String(button.dataset.version === normalized));
+      const isActive = button.dataset.version === normalized;
+      button.setAttribute("aria-pressed", String(isActive));
+      if (isActive) activeButton = button;
     });
 
     if (!frame.src.endsWith(config.src)) frame.src = config.src;
@@ -129,11 +146,17 @@
       window.history.replaceState({ version: normalized }, "", url);
     }
 
+    revealActiveVersion(activeButton, updateUrl);
     showToast(`已切換到 ${config.mapping}`);
   }
 
   buttons.forEach((button) => {
     button.addEventListener("click", () => activate(button.dataset.version));
+  });
+
+  mobileVersionQuery.addEventListener("change", (event) => {
+    if (!event.matches) return;
+    revealActiveVersion(buttons.find((button) => button.getAttribute("aria-pressed") === "true"), false);
   });
 
   window.addEventListener("message", (event) => {

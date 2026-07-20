@@ -1,4 +1,4 @@
-# Light Demo UX Backlog
+# Lite Demo UX Backlog
 
 ## V5 Contextual Card Flow Candidate｜2026-07-20
 
@@ -25,7 +25,7 @@
 
 ## V4 建立時的 Decision Lock（歷史紀錄）
 
-- **已接受的候選**：V4 Light Demo 的亮白、淺灰、黑字與單一藍色視覺方向。
+- **已接受的候選**：V4 Lite Demo 的亮白、淺灰、黑字與單一藍色視覺方向。
 - **本輪允許變更**：視覺層次、component presentation、sample content 與文件。
 - **本輪凍結**：點擊入口、上下滑、左右滑、返回、追蹤與略過的行為。
 - **停止條件**：不在本輪實作下列 UX 待辦；先保留可回溯的 V3／V4 HTML。
@@ -34,7 +34,7 @@
 
 ### UX-01｜收斂 Reel 入口
 
-目前 Light Demo 有五個可進 Reel 的 target：主入口 CTA、判讀路徑、資訊候選 A、資訊候選 B、資訊候選 C。入口過多，且主入口 CTA 與下方判讀路徑的用途重疊。
+目前 Lite Demo 有五個可進 Reel 的 target：主入口 CTA、判讀路徑、資訊候選 A、資訊候選 B、資訊候選 C。入口過多，且主入口 CTA 與下方判讀路徑的用途重疊。
 
 - 優先假設：若保留「判讀路徑」，移除上方 `.reels-entry` 主入口。
 - 待決策：保留一個全域入口，或只讓各資訊候選成為 contextual entry point。
